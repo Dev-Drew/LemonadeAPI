@@ -3,10 +3,12 @@ import {
   Controller,
   Delete,
   Get,
+  HttpException,
   HttpStatus,
   Param,
   Post,
   Put,
+  Query,
 } from "@nestjs/common";
 import { AppService } from "./app.service";
 import { DyanmoService } from "./dyanmo/dyanmoService";
@@ -14,16 +16,56 @@ import { PaymentConfirmation } from "./models/paymentConfirmation";
 import { Quote } from "./models/quote";
 import { QuoteInput } from "./models/quoteInput";
 import { PaymentService } from "./payments/payments";
-import open from "open";
 import { QuoteStatus } from "./models/quoteStatus";
+import { PaymentInformation } from "./models/paymentProcessInput";
+import { SessionService } from "./payments/sessionService";
+import { PolicyService } from "./policies/policyService";
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const open = require("open");
 
 @Controller()
 export class AppController {
   constructor(
     private readonly appService: AppService,
     private readonly dyanmoService: DyanmoService,
-    private readonly paymentService: PaymentService
+    private readonly paymentService: PaymentService,
+    private readonly sessionService: SessionService,
+    private readonly policyService: PolicyService
   ) {}
+
+  @Get("/payment/success/:id?")
+  public async paymentSuccess(
+    @Param("id") id,
+    @Query("session_id") checkoutSession
+  ): Promise<any> {
+    console.log("params: " + id);
+    console.log("session_id: " + checkoutSession);
+
+    const quote: Quote = await this.dyanmoService.getItem(id);
+    const session = await this.sessionService.retrieveStripeSession(
+      checkoutSession
+    );
+    console.log("session: " + JSON.stringify(session));
+    console.log("quote: " + JSON.stringify(quote));
+
+    if (
+      session.payment_status === "paid" &&
+      quote.quoteDetails.status === QuoteStatus.READY
+    ) {
+      const policy = this.policyService.createPolicy(quote);
+      return policy;
+    } else {
+      throw new HttpException(
+        "This quote has not been paid for " + id,
+        HttpStatus.BAD_REQUEST
+      );
+    }
+  }
+
+  @Get("/payment/failure")
+  public paymentFailure(): any {
+    return "Payment Failure";
+  }
 
   @Get("/")
   public async getQuotes(): Promise<any> {
@@ -51,7 +93,15 @@ export class AppController {
       console.log(
         "Returning quote with id: " + id + "quote: " + JSON.stringify(quote)
       );
-      return quote;
+
+      if (!quote) {
+        throw new HttpException(
+          "No Quote found with ID: " + id,
+          HttpStatus.NOT_FOUND
+        );
+      } else {
+        return quote;
+      }
     } else {
       console.error("Invalid ID supplied: " + id);
     }
@@ -89,16 +139,21 @@ export class AppController {
     }
   }
 
-  @Post("/payment")
+  @Post("/createCheckOutSession")
   public async processPayment(
-    @Body() id: string
+    @Body() paymentInfomartion: PaymentInformation
   ): Promise<PaymentConfirmation> {
-    console.log("Received Request to process payment for client: " + id);
-    const quote: Quote = await this.dyanmoService.getItem(id);
-
-    // eslint-disable-next-line prettier/prettier
-		if (quote.quoteDetails.status === QuoteStatus.READY) {
-      const checkoutSession = await this.paymentService.processPayment(quote);
+    console.log(
+      "Received Request to process payment for client: " +
+        JSON.stringify(paymentInfomartion.id)
+    );
+    const quote: Quote = await this.dyanmoService.getItem(
+      paymentInfomartion.id
+    );
+    console.log("Recieved quote for client with ID: " + paymentInfomartion.id);
+    let checkoutSession;
+    if (quote.quoteDetails.status === QuoteStatus.READY) {
+      checkoutSession = await this.paymentService.processPayment(quote);
       console.log("checkoutSession: " + JSON.stringify(checkoutSession));
       open(checkoutSession.url);
     } else {
@@ -106,16 +161,7 @@ export class AppController {
         `Quote is not in ${QuoteStatus.READY}, it must be in this status to process payment`
       );
     }
-    const paymentConfirmation: PaymentConfirmation = {
-      id: quote.id,
-      amount: quote.premium,
-      date: new Date(),
-    };
 
-    console.log(
-      "Returning payment confirmation: " + JSON.stringify(paymentConfirmation)
-    );
-
-    return paymentConfirmation;
+    return checkoutSession;
   }
 }
