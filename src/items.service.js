@@ -12,17 +12,17 @@ function getAllItems() {
 }
 
 function findItem(id) {
-	return items.find(i => +i.id === +id);
+	return items.find((i) => +i.id === +id);
 }
 
 function updateItem(item, itemData = {}) {
 	const updatedItem = { ...item, ...itemData, lastUpdate: new Date() };
-	items = [...items.filter(i => i.id !== item.id), updatedItem];
+	items = [...items.filter((i) => i.id !== item.id), updatedItem];
 	return updatedItem;
 }
 
 function deleteItem(item) {
-	items = items.filter(i => i.id !== item.id);
+	items = items.filter((i) => i.id !== item.id);
 }
 
 module.exports = { createItem, getAllItems, findItem, updateItem, deleteItem };

@@ -1,6 +1,6 @@
 let count = 0;
 
-function createQuote(quoteData) {
+export function createQuote(quoteData) {
 	count++;
 	return {
 		id: 'LQ' + count,
