@@ -4,6 +4,8 @@ import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 import { HttpStatus } from "@nestjs/common";
 import { DocumentClient } from "aws-sdk/clients/dynamodb";
 import { AWSError } from "aws-sdk/lib/error";
+import { LemonadeDocument } from "src/models/lemonadeDocument";
+import { Policy } from "src/models/policy";
 import { Quote } from "src/models/quote";
 
 const AWS = require("aws-sdk");
@@ -11,17 +13,10 @@ const AWS = require("aws-sdk");
 export class DyanmoService {
   constructor(private client: DynamoDBDocumentClient) {}
 
-  public async postItem(quote: Quote): Promise<any> {
+  public async postItem(itemToBeSaved: LemonadeDocument): Promise<any> {
     const docClient = new AWS.DynamoDB.DocumentClient();
 
-    const params = {
-      TableName: "ClientQuotesTEST",
-      Item: {
-        id: quote.id,
-        quote: quote,
-      },
-    };
-
+    const params = this.createParams(itemToBeSaved);
     console.log("Adding a new item... : " + JSON.stringify(params));
     return new Promise((resolve, reject) => {
       docClient.put(params, function (err) {
@@ -32,8 +27,8 @@ export class DyanmoService {
             reject(err)
           );
         } else {
-          resolve(quote);
-          console.log("Added item:", JSON.stringify(quote, null, 2));
+          resolve(itemToBeSaved);
+          console.log("Added item:", JSON.stringify(itemToBeSaved, null, 2));
         }
       });
     }).then((data) => {
@@ -61,7 +56,7 @@ export class DyanmoService {
           console.log("ERROR: " + JSON.stringify(error));
           reject(error);
         } else {
-          resolve(data.Item?.quote);
+          resolve(data.Item?.data);
         }
       });
     }).then((data) => {
@@ -143,5 +138,20 @@ export class DyanmoService {
     }).then((data) => {
       return data;
     });
+  }
+
+  private createParams(itemToSaved: LemonadeDocument): any {
+    let tableName = "ClientQuotesTEST";
+    if (itemToSaved instanceof Policy) {
+      tableName = "PolicyTable";
+    }
+    const params = {
+      TableName: tableName,
+      Item: {
+        id: itemToSaved.id,
+        data: itemToSaved,
+      },
+    };
+    return params;
   }
 }

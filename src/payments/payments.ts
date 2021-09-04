@@ -16,7 +16,6 @@ export class PaymentService {
     const session = this.stripe.checkout.sessions.create({
       line_items: [
         {
-          // TODO: replace this with the `price` of the product you want to sell
           price_data: {
             currency: "usd",
             unit_amount: quote.premium,

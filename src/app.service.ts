@@ -9,7 +9,7 @@ export class AppService {
   public createQuote(quoteData: QuoteInput): Quote {
     const quote: Quote = {
       premium: 500,
-      quoteType: CoverageType.HOME,
+      coverageType: CoverageType.HOME,
       id: "LQ" + Date.now().toString(),
       quoteDetails: {
         status: QuoteStatus.READY,
@@ -19,4 +19,5 @@ export class AppService {
 
     return quote;
   }
+  //TODO : Determine preimum dynamically
 }

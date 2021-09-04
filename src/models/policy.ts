@@ -1,11 +1,12 @@
-import { PolicyType } from "aws-sdk/clients/applicationautoscaling";
+import { CoverageType } from "./coverageType";
+import { LemonadeDocument } from "./lemonadeDocument";
 
-export class Policy {
+export class Policy implements LemonadeDocument {
+  public id: string;
   private quoteId: string;
-  private policyId: string;
   private effectiveDate: string;
   private lengthOfTerm: number;
-  private policyType: PolicyType[] = [];
+  private coverageType: CoverageType;
   private deductible: number;
   private preimum: number;
   private lastUpdateTime?: string;
@@ -15,16 +16,16 @@ export class Policy {
     policyId,
     effectiveDate,
     lengthOfTerm,
-    policyType,
+    coverageType,
     deductible,
     preimum
   ) {
     this.quoteId = quoteId;
     this.deductible = deductible;
-    this.policyId = policyId;
+    this.id = policyId;
     this.effectiveDate = effectiveDate;
     this.lengthOfTerm = lengthOfTerm;
-    this.policyType.push(policyType);
+    this.coverageType = coverageType;
     this.preimum = preimum;
   }
 }

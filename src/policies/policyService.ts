@@ -13,7 +13,7 @@ export class PolicyService {
       policyID,
       effectiveDate,
       quote.quoteDetails.lengthOfTerm || 12,
-      quote.quoteType,
+      quote.coverageType,
       quote.quoteDetails.deductible | 2000,
       quote.premium
     );

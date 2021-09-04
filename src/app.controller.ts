@@ -20,6 +20,7 @@ import { QuoteStatus } from "./models/quoteStatus";
 import { PaymentInformation } from "./models/paymentProcessInput";
 import { SessionService } from "./payments/sessionService";
 import { PolicyService } from "./policies/policyService";
+import { Policy } from "./models/policy";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const open = require("open");
 
@@ -33,7 +34,7 @@ export class AppController {
     private readonly policyService: PolicyService
   ) {}
 
-  @Get("/payment/success/:id?")
+  @Post("/payment/success/:id?")
   public async paymentSuccess(
     @Param("id") id,
     @Query("session_id") checkoutSession
@@ -53,7 +54,8 @@ export class AppController {
       quote.quoteDetails.status === QuoteStatus.READY
     ) {
       const policy = this.policyService.createPolicy(quote);
-      return policy;
+      const savedPolicy: Policy = await this.dyanmoService.postItem(policy);
+      return savedPolicy;
     } else {
       throw new HttpException(
         "This quote has not been paid for " + id,
