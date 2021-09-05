@@ -5,6 +5,8 @@ import {
   Get,
   HttpException,
   Body,
+  UsePipes,
+  ValidationPipe,
 } from "@nestjs/common";
 import { PaymentConfirmation } from "./models/paymentConfirmation";
 import { PaymentInformation } from "./models/paymentInformation";
@@ -28,6 +30,7 @@ export class PaymentsController {
   }
 
   @Post("/paymentConfirmation")
+  @UsePipes(new ValidationPipe({ transform: true }))
   public async processPayment(
     @Body() paymentInfomartion: PaymentInformation
   ): Promise<PaymentConfirmation> {

@@ -1,4 +1,11 @@
-import { Body, Controller, Get, Post } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  UsePipes,
+  ValidationPipe,
+} from "@nestjs/common";
 import { TableNames } from "src/dyanmo/constants/TableNames.enum";
 import { DyanmoService } from "src/dyanmo/dyanmo.service";
 import { PaymentConfirmation } from "src/payments/models/paymentConfirmation";
@@ -13,6 +20,7 @@ export class PolicyController {
   ) {}
 
   @Post("/policy")
+  @UsePipes(new ValidationPipe({ transform: true }))
   public async Policy(
     @Body() paymentConfirmation: PaymentConfirmation
   ): Promise<Policy> {

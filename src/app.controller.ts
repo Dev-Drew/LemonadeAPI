@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, HttpStatus, Put } from "@nestjs/common";
 import { AppService } from "./app.service";
 import { LemonadeDocument } from "./common/models/lemonadeDocument";
-import { IsValidQuoteOrPolicyID } from "./common/valadtion/Validators";
+import { IsValidQuoteOrPolicyID } from "./common/valadtion/customIDValidator";
 
 @Controller()
 export class AppController {

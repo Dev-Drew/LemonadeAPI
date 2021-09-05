@@ -1,4 +1,11 @@
-import { Body, Controller, Get, Post } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  UsePipes,
+  ValidationPipe,
+} from "@nestjs/common";
 import { TableNames } from "src/dyanmo/constants/TableNames.enum";
 import { DyanmoService } from "src/dyanmo/dyanmo.service";
 import { Quote } from "./models/quote";
@@ -13,6 +20,7 @@ export class QuoteController {
   ) {}
 
   @Post("/quote")
+  @UsePipes(new ValidationPipe({ transform: true }))
   public async createQuote(@Body() quoteInput: QuoteInput): Promise<Quote> {
     console.log("Recieved request for Quote: " + JSON.stringify(quoteInput));
     const quote: Quote = this.quoteService.createQuote(quoteInput);
