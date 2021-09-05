@@ -1,4 +1,4 @@
 export enum TableNames {
-  POLICY_TABLE = "PolicyTable",
+  POLICY_TABLE = "PoliciesTable",
   QUOTE_TABLE = "QuoteTable",
 }
