@@ -152,16 +152,14 @@ export class AppController {
     const quote: Quote = (
       await this.dyanmoService.getItem(paymentInfomartion.id)
     ).data;
+
     console.log("Recieved quote for client with ID: " + JSON.stringify(quote));
 
     let paymentConfirmation: PaymentConfirmation;
     if (QuoteStatus.READY === quote.quoteDetails.status) {
-      const checkoutSession = await this.paymentService.processPayment(quote);
-      console.log("checkoutSession: " + JSON.stringify(checkoutSession));
-      open(checkoutSession.url);
-      paymentConfirmation = this.paymentService.createPaymentConfirmation(
-        quote,
-        checkoutSession
+      paymentConfirmation = await this.paymentService.processPayment(
+        paymentInfomartion,
+        quote
       );
     } else {
       throw new Error(

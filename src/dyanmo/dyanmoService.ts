@@ -115,7 +115,6 @@ export class DyanmoService {
   }
 
   private createParams(id: string, item?: LemonadeDocument): any {
-    console.log("entering create params");
     const tableName = this.determineTableName(id);
     const params = {
       TableName: tableName,
@@ -127,7 +126,6 @@ export class DyanmoService {
         id: id,
       },
     };
-    console.log("EXITING PARAMS ");
     return params;
   }
 
