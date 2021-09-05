@@ -20,8 +20,8 @@ export class PaymentService {
             currency: "usd",
             unit_amount: quote.premium,
             product_data: {
-              name: "Lemonade Homeowners Insurance",
-              description: `Policy for ${quoteInput.firstName} ${quoteInput.lastName} covering a home of ${quoteInput.propertySize} built in ${quoteInput.propertyYearBuilt}`,
+              name: `Lemonade ${quote.coverageType.toLocaleUpperCase()} Insurance`,
+              description: `Policy for ${quoteInput.firstName} ${quoteInput.lastName} covering residence at ${quoteInput.address}`,
             },
           },
           quantity: 1,

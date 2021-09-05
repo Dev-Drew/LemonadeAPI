@@ -49,11 +49,16 @@ export class AppController {
     console.log("session: " + JSON.stringify(session));
     console.log("quote: " + JSON.stringify(quote));
 
+    //do more checks, break this into it's own function
     if (
       session.payment_status === "paid" &&
       quote.quoteDetails.status === QuoteStatus.READY
     ) {
-      const policy = this.policyService.createPolicy(quote);
+      const totalPaidByCustomer: number = session.amount_total;
+      const policy = this.policyService.createPolicy(
+        quote,
+        totalPaidByCustomer
+      );
       const savedPolicy: Policy = await this.dyanmoService.postItem(policy);
       return savedPolicy;
     } else {
@@ -91,7 +96,7 @@ export class AppController {
     const id = params.id;
     if (id) {
       console.log("Request recieved for item with ID:  " + id);
-      const quote: Quote = await this.dyanmoService.getItem(id);
+      const quote: Quote = (await this.dyanmoService.getItem(id)).data;
       console.log(
         "Returning quote with id: " + id + "quote: " + JSON.stringify(quote)
       );
@@ -149,12 +154,12 @@ export class AppController {
       "Received Request to process payment for client: " +
         JSON.stringify(paymentInfomartion.id)
     );
-    const quote: Quote = await this.dyanmoService.getItem(
-      paymentInfomartion.id
-    );
-    console.log("Recieved quote for client with ID: " + paymentInfomartion.id);
+    const quote: Quote = (
+      await this.dyanmoService.getItem(paymentInfomartion.id)
+    ).data;
+    console.log("Recieved quote for client with ID: " + JSON.stringify(quote));
     let checkoutSession;
-    if (quote.quoteDetails.status === QuoteStatus.READY) {
+    if (QuoteStatus.READY === quote.quoteDetails.status) {
       checkoutSession = await this.paymentService.processPayment(quote);
       console.log("checkoutSession: " + JSON.stringify(checkoutSession));
       open(checkoutSession.url);

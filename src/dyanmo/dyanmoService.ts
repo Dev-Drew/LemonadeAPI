@@ -7,6 +7,7 @@ import { AWSError } from "aws-sdk/lib/error";
 import { LemonadeDocument } from "src/models/lemonadeDocument";
 import { Policy } from "src/models/policy";
 import { Quote } from "src/models/quote";
+import { TableNames } from "./TableNames.enum";
 
 const AWS = require("aws-sdk");
 
@@ -39,7 +40,7 @@ export class DyanmoService {
   public async getItem(id: string): Promise<any> {
     console.log("Querying table for quote with id " + id);
     const params = {
-      TableName: "ClientQuotesTEST",
+      TableName: TableNames.QUOTE_TABLE,
       Key: {
         id: id,
       },
@@ -56,7 +57,7 @@ export class DyanmoService {
           console.log("ERROR: " + JSON.stringify(error));
           reject(error);
         } else {
-          resolve(data.Item?.data);
+          resolve(data.Item);
         }
       });
     }).then((data) => {
@@ -66,7 +67,7 @@ export class DyanmoService {
 
   public async getAllItems(): Promise<any> {
     const params = {
-      TableName: "ClientQuotesTEST",
+      TableName: TableNames.QUOTE_TABLE,
     };
     return this.makeDBScanCall(params);
   }
@@ -90,7 +91,7 @@ export class DyanmoService {
   public async updateItem(quote: Quote): Promise<any> {
     quote.lastUpdateTime = Date.now().toString();
     const params = {
-      TableName: "ClientQuotesTEST",
+      TableName: TableNames.QUOTE_TABLE,
       Item: {
         id: quote.id,
         quote: quote,
@@ -118,7 +119,7 @@ export class DyanmoService {
   public async deleteItem(id: string): Promise<any> {
     const docClient: DocumentClient = new AWS.DynamoDB.DocumentClient();
     const params = {
-      TableName: "ClientQuotesTEST",
+      TableName: TableNames.QUOTE_TABLE,
       Key: {
         id: id,
       },
@@ -140,18 +141,23 @@ export class DyanmoService {
     });
   }
 
-  private createParams(itemToSaved: LemonadeDocument): any {
-    let tableName = "ClientQuotesTEST";
-    if (itemToSaved instanceof Policy) {
-      tableName = "PolicyTable";
-    }
+  private createParams(item: LemonadeDocument): any {
+    const tableName = this.determineTableName(item);
     const params = {
       TableName: tableName,
       Item: {
-        id: itemToSaved.id,
-        data: itemToSaved,
+        id: item.id,
+        data: item,
       },
     };
     return params;
+  }
+
+  private determineTableName(item: LemonadeDocument): string {
+    let tableName = TableNames.QUOTE_TABLE;
+    if (item instanceof Policy) {
+      tableName = TableNames.POLICY_TABLE;
+    }
+    return tableName;
   }
 }

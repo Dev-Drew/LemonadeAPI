@@ -23,7 +23,7 @@ AWS.config.update({
 const dynamodb = new AWS.DynamoDB();
 
 const params = {
-  TableName: "ClientQuotesTEST",
+  TableName: "QuoteTable",
   KeySchema: [
     { AttributeName: "id", KeyType: "HASH" }, //Partition key
   ],

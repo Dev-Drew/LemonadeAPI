@@ -23,7 +23,7 @@ AWS.config.update({
 const dynamodb = new AWS.DynamoDB();
 
 const params = {
-  TableName: "PolicyTable",
+  TableName: TableNames.PolicyTable,
   KeySchema: [
     { AttributeName: "id", KeyType: "HASH" }, //Partition key
   ],

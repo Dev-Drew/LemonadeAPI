@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { CoverageType } from "./models/coverageType";
+import { CoverageType } from "./models/coverageType.enum";
 import { Quote } from "./models/quote";
 import { QuoteInput } from "./models/quoteInput";
 import { QuoteStatus } from "./models/quoteStatus";

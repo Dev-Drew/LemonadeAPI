@@ -1,4 +1,4 @@
-import { CoverageType } from "./coverageType";
+import { CoverageType } from "./coverageType.enum";
 import { LemonadeDocument } from "./lemonadeDocument";
 
 export class Policy implements LemonadeDocument {
@@ -9,6 +9,7 @@ export class Policy implements LemonadeDocument {
   private coverageType: CoverageType;
   private deductible: number;
   private preimum: number;
+  private totalPaidByCustomer: number;
   private lastUpdateTime?: string;
 
   public constructor(
@@ -18,7 +19,8 @@ export class Policy implements LemonadeDocument {
     lengthOfTerm,
     coverageType,
     deductible,
-    preimum
+    preimum,
+    totalPaidByCustomer
   ) {
     this.quoteId = quoteId;
     this.deductible = deductible;
@@ -27,5 +29,6 @@ export class Policy implements LemonadeDocument {
     this.lengthOfTerm = lengthOfTerm;
     this.coverageType = coverageType;
     this.preimum = preimum;
+    this.totalPaidByCustomer = totalPaidByCustomer;
   }
 }

@@ -4,7 +4,7 @@ import { Quote } from "src/models/quote";
 
 @Injectable()
 export class PolicyService {
-  public createPolicy(quote: Quote): Policy {
+  public createPolicy(quote: Quote, totalPaidBycusomter: number): Policy {
     const policyID = this.createPolicyId();
     const effectiveDate = this.determineEffectiveDate(quote);
 
@@ -15,7 +15,8 @@ export class PolicyService {
       quote.quoteDetails.lengthOfTerm || 12,
       quote.coverageType,
       quote.quoteDetails.deductible | 2000,
-      quote.premium
+      quote.premium,
+      totalPaidBycusomter
     );
 
     console.log("CREATED POLICY: " + policy);
