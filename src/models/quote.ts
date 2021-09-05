@@ -5,7 +5,7 @@ import { QuoteDetails } from "./quoteDetails";
 export interface Quote extends LemonadeDocument {
   premium: number;
   id: string;
-  lastUpdateTime?: string;
+  lastUpdateTime?: Date;
   coverageType: CoverageType;
   quoteDetails: QuoteDetails;
 }

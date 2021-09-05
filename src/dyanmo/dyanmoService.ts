@@ -37,15 +37,10 @@ export class DyanmoService {
   }
 
   public async getItem(id: string): Promise<any> {
+    const docClient: DocumentClient = new AWS.DynamoDB.DocumentClient();
     console.log("Querying table for quote with id " + id);
     const params = this.createParams(id);
     console.log("PARAMS: " + JSON.stringify(params));
-    return this.makeDBGetCall(params);
-  }
-
-  private async makeDBGetCall(params): Promise<any> {
-    const docClient: DocumentClient = new AWS.DynamoDB.DocumentClient();
-
     return new Promise((resolve, reject) => {
       docClient.get(params, (error: AWSError, data: GetItemOutput) => {
         if (error) {
@@ -61,15 +56,10 @@ export class DyanmoService {
   }
 
   public async getAllItems(): Promise<any> {
+    const docClient: DocumentClient = new AWS.DynamoDB.DocumentClient();
     const params = {
       TableName: TableNames.QUOTE_TABLE,
     };
-    return this.makeDBScanCall(params);
-  }
-
-  private makeDBScanCall(params): Promise<any> {
-    const docClient: DocumentClient = new AWS.DynamoDB.DocumentClient();
-
     return new Promise((resolve, reject) => {
       docClient.scan(params, (error: AWSError, data) => {
         if (error) {
@@ -84,18 +74,13 @@ export class DyanmoService {
   }
 
   public async updateItem(quote: Quote, status?: any): Promise<any> {
-    quote.lastUpdateTime = Date.now().toString();
+    const docClient: DocumentClient = new AWS.DynamoDB.DocumentClient();
+    quote.lastUpdateTime = new Date();
 
     if (status) {
       quote.quoteDetails.status = status;
     }
     const params = this.createParams(quote.id, quote);
-    return this.makeDBPutCall(params);
-  }
-
-  private makeDBPutCall(params): Promise<any> {
-    const docClient: DocumentClient = new AWS.DynamoDB.DocumentClient();
-
     return new Promise((resolve, reject) => {
       docClient.put(params, (error: AWSError) => {
         if (error) {
