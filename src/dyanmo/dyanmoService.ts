@@ -16,7 +16,7 @@ export class DyanmoService {
   public async postItem(itemToBeSaved: LemonadeDocument): Promise<any> {
     const docClient = new AWS.DynamoDB.DocumentClient();
 
-    const params = this.createParams(itemToBeSaved.id);
+    const params = this.createParams(itemToBeSaved.id, itemToBeSaved);
     console.log("Adding a new item... : " + JSON.stringify(params));
     return new Promise((resolve, reject) => {
       docClient.put(params, function (err) {
@@ -114,8 +114,9 @@ export class DyanmoService {
     });
   }
 
-  private createParams(id: string, item?: LemonadeDocument): any {
+  private createParams(id: string, item?: any): any {
     const tableName = this.determineTableName(id);
+    console.log("ITEM being saved: " + JSON.stringify(item));
     const params = {
       TableName: tableName,
       Item: {
