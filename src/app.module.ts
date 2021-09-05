@@ -1,8 +1,8 @@
+import { MailerModule } from "@nestjs-modules/mailer";
 import { Module } from "@nestjs/common";
 import { StripeModule } from "nestjs-stripe";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
-import { HelperService } from "./common/helper.service";
 import { DyanmoService } from "./dyanmo/dyanmo.service";
 import { PaymentsModule } from "./payments/payments.module";
 import { PolicyModule } from "./policies/policy.module";
@@ -18,8 +18,21 @@ import { QuoteModule } from "./quotes/quote.module";
     PolicyModule,
     PaymentsModule,
     QuoteModule,
+    MailerModule.forRoot({
+      transport: {
+        service: "mailtrap",
+        host: "smtp://smtp.mailtrap.io",
+        port: 2525,
+        ignoreTLS: true,
+        secure: false,
+        auth: {
+          user: "2a798c947a2ebe",
+          pass: "8eb3c831254231",
+        },
+      },
+    }),
   ],
   controllers: [AppController],
-  providers: [DyanmoService, HelperService, AppService],
+  providers: [DyanmoService, AppService],
 })
 export class AppModule {}

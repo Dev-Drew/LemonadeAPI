@@ -1,7 +1,7 @@
 import { Module } from "@nestjs/common";
 import { AppService } from "src/app.service";
-import { HelperService } from "src/common/helper.service";
 import { DyanmoService } from "src/dyanmo/dyanmo.service";
+import { EmailService } from "src/email/email.service";
 import { StripeService } from "src/payments/stripe/stripe.service";
 import { PolicyController } from "./policy.controller";
 import { PolicyService } from "./policy.service";
@@ -13,7 +13,7 @@ import { PolicyService } from "./policy.service";
     DyanmoService,
     StripeService,
     AppService,
-    HelperService,
+    EmailService,
   ],
 })
 export class PolicyModule {}

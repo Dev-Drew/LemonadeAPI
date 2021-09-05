@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsString } from "class-validator";
+import { IsBoolean, IsNotEmpty, IsNumber, IsString } from "class-validator";
 import { LemonadeDocument } from "../../common/models/lemonadeDocument";
 
 export class PaymentConfirmation extends LemonadeDocument {
@@ -9,6 +9,9 @@ export class PaymentConfirmation extends LemonadeDocument {
   @IsNotEmpty()
   @IsString()
   quoteId: string;
+
+  @IsBoolean()
+  success: boolean;
 
   confirmationDate?: Date;
 

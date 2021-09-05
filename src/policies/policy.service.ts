@@ -8,13 +8,15 @@ import { QuoteStatus } from "src/quotes/constants/quoteStatus.enum";
 import { Stripe } from "stripe";
 import { PolicyStatus } from "./constants/policyStatus.enum";
 import { AppService } from "src/app.service";
+import { EmailService } from "src/email/email.service";
 
 @Injectable()
 export class PolicyService {
   public constructor(
     private readonly appService: AppService,
     private readonly stripeService: StripeService,
-    private readonly dyanmoService: DyanmoService
+    private readonly dyanmoService: DyanmoService,
+    private readonly emailService: EmailService
   ) {}
 
   public async createPolicy(
@@ -28,6 +30,11 @@ export class PolicyService {
       const policy = this.createPolicyObject(quote);
       const savedPolicy: Policy = await this.dyanmoService.postItem(policy);
       await this.dyanmoService.updateItem(quote, QuoteStatus.DONE);
+      this.emailService.sendEmail(
+        policy,
+        quote.quoteDetails.clientDetails.email,
+        quote.quoteDetails.clientDetails.firstName
+      );
       return savedPolicy;
     } else {
       throw new HttpException(
@@ -76,7 +83,6 @@ export class PolicyService {
       policyStatus: PolicyStatus.ACTIVE,
     };
 
-    console.log("CREATED POLICY: " + policy);
     return policy;
   }
 
@@ -88,8 +94,7 @@ export class PolicyService {
       await this.stripeService.retrieveStripeSession(paymentConfirmation.id);
     const isClientPaid = session.payment_status === "paid";
     const isStatusReady = quote.quoteDetails.status === QuoteStatus.READY;
-    console.log("STRIPE SESSION : " + JSON.stringify(session));
-    // const isSessionValid = !session.;
+
     const isCorrectPaymentAmount =
       session.amount_subtotal === quote.premium * 100;
     const policyCanBeCreated =

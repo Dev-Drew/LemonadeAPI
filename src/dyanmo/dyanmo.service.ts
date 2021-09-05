@@ -38,7 +38,6 @@ export class DyanmoService {
     const docClient: DocumentClient = new AWS.DynamoDB.DocumentClient();
     console.log("Querying table for quote with id " + id);
     const params = this.createParams(id);
-    console.log("PARAMS: " + JSON.stringify(params));
     return new Promise((resolve, reject) => {
       docClient.get(params, (error: AWSError, getItemOutput: GetItemOutput) => {
         if (error) {
