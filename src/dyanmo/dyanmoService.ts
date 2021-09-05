@@ -4,11 +4,8 @@ import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 import { HttpStatus } from "@nestjs/common";
 import { DocumentClient } from "aws-sdk/clients/dynamodb";
 import { AWSError } from "aws-sdk/lib/error";
-import { stat } from "fs";
 import { LemonadeDocument } from "src/models/lemonadeDocument";
-import { Policy } from "src/models/policy";
 import { Quote } from "src/models/quote";
-import { QuoteStatus } from "src/models/quoteStatus";
 import { TableNames } from "./TableNames.enum";
 
 const AWS = require("aws-sdk");
@@ -19,7 +16,7 @@ export class DyanmoService {
   public async postItem(itemToBeSaved: LemonadeDocument): Promise<any> {
     const docClient = new AWS.DynamoDB.DocumentClient();
 
-    const params = this.createParams(itemToBeSaved);
+    const params = this.createParams(itemToBeSaved.id);
     console.log("Adding a new item... : " + JSON.stringify(params));
     return new Promise((resolve, reject) => {
       docClient.put(params, function (err) {
@@ -41,12 +38,8 @@ export class DyanmoService {
 
   public async getItem(id: string): Promise<any> {
     console.log("Querying table for quote with id " + id);
-    const params = {
-      TableName: TableNames.QUOTE_TABLE,
-      Key: {
-        id: id,
-      },
-    };
+    const params = this.createParams(id);
+    console.log("PARAMS: " + JSON.stringify(params));
     return this.makeDBGetCall(params);
   }
 
@@ -96,14 +89,7 @@ export class DyanmoService {
     if (status) {
       quote.quoteDetails.status = status;
     }
-    const tableName = this.determineTableName(quote);
-    const params = {
-      TableName: tableName,
-      Item: {
-        id: quote.id,
-        quote: quote,
-      },
-    };
+    const params = this.createParams(quote.id, quote);
     return this.makeDBPutCall(params);
   }
 
@@ -125,12 +111,7 @@ export class DyanmoService {
 
   public async deleteItem(id: string): Promise<any> {
     const docClient: DocumentClient = new AWS.DynamoDB.DocumentClient();
-    const params = {
-      TableName: TableNames.QUOTE_TABLE,
-      Key: {
-        id: id,
-      },
-    };
+    const params = this.createParams(id);
 
     console.log("Trying to delete quote with id " + id);
     return new Promise((resolve, reject) => {
@@ -148,21 +129,26 @@ export class DyanmoService {
     });
   }
 
-  private createParams(item: LemonadeDocument): any {
-    const tableName = this.determineTableName(item);
+  private createParams(id: string, item?: LemonadeDocument): any {
+    console.log("entering create params");
+    const tableName = this.determineTableName(id);
     const params = {
       TableName: tableName,
       Item: {
-        id: item.id,
+        id: id,
         data: item,
       },
+      Key: {
+        id: id,
+      },
     };
+    console.log("EXITING PARAMS ");
     return params;
   }
 
-  private determineTableName(item: LemonadeDocument): string {
+  private determineTableName(id: string): string {
     let tableName = TableNames.QUOTE_TABLE;
-    if (item instanceof Policy) {
+    if (id.slice(0, 2) === "LP") {
       tableName = TableNames.POLICY_TABLE;
     }
     return tableName;
