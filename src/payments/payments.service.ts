@@ -5,7 +5,7 @@ import { Quote } from "src/quotes/models/quote";
 import { QuoteStatus } from "src/quotes/constants/quoteStatus.enum";
 import { PaymentInformation } from "./models/paymentInformation";
 import { StripeService } from "./stripe/stripe.service";
-import { IDValidationService } from "src/common/idValidation.service";
+import { IDValidationService } from "src/common/services/idValidation.service";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const open = require("open");
 

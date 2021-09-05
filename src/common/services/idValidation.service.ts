@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { IDPrefixes } from "./constants/quotePrefixes.enum";
+import { IDPrefixes } from "../constants/quotePrefixes.enum";
 
 @Injectable()
 export class IDValidationService {

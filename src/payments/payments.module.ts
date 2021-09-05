@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { IDValidationService } from "src/common/idValidation.service";
+import { IDValidationService } from "src/common/services/idValidation.service";
 import { DyanmoService } from "src/dyanmo/dyanmo.service";
 import { PaymentsController } from "./payments.controller";
 import { PaymentService } from "./payments.service";
