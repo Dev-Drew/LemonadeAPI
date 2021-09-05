@@ -6,6 +6,7 @@ import { QuoteInput } from "src/quotes/models/quoteInput";
 import Stripe from "stripe";
 import { PaymentInformation } from "./models/paymentProcessInput";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
+const open = require("open");
 const YOUR_DOMAIN = "http://localhost:3000";
 
 @Injectable()
@@ -22,6 +23,7 @@ export class PaymentService {
     } else {
       const session = await this.createCheckoutSession(quote);
       paymentConfirmation = this.createPaymentConfirmation(quote, session);
+      open(session.url);
     }
 
     return paymentConfirmation;

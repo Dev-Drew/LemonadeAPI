@@ -21,8 +21,6 @@ import { PaymentInformation } from "./payments/models/paymentProcessInput";
 import { SessionService } from "./payments/sessionService";
 import { PolicyService } from "./policies/policyService";
 import { Policy } from "./policies/models/policy";
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const open = require("open");
 
 @Controller()
 export class AppController {

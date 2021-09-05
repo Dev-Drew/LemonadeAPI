@@ -1,5 +1,6 @@
 import { CoverageType } from "../../models/coverageType.enum";
 import { LemonadeDocument } from "../../models/lemonadeDocument";
+import { PolicyStatus } from "../constants/policyStatus.enum";
 
 export class Policy implements LemonadeDocument {
   public id: string;
@@ -10,6 +11,7 @@ export class Policy implements LemonadeDocument {
   private deductible: number;
   private preimum: number;
   private totalPaidByCustomer: number;
+  private policyStatus: PolicyStatus;
   private lastUpdateTime?: string;
 
   public constructor(
@@ -30,5 +32,6 @@ export class Policy implements LemonadeDocument {
     this.coverageType = coverageType;
     this.preimum = preimum;
     this.totalPaidByCustomer = totalPaidByCustomer;
+    this.policyStatus = PolicyStatus.ACTIVE;
   }
 }
