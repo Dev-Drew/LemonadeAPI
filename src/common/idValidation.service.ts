@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { IDPrefixes } from "./constants/quotePrefixes.enum";
 
 @Injectable()
-export class HelperService {
+export class IDValidationService {
   public isValidQuoteOrPolicy(id: string): boolean {
     return this.isValidQuoteId(id) || this.isValidPolicyId(id);
   }

@@ -2,7 +2,6 @@ import { Module } from "@nestjs/common";
 import { StripeModule } from "nestjs-stripe";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
-import { HelperService } from "./common/helper.service";
 import { DyanmoService } from "./dyanmo/dyanmo.service";
 import { PaymentsModule } from "./payments/payments.module";
 import { PolicyModule } from "./policies/policy.module";
@@ -20,6 +19,6 @@ import { QuoteModule } from "./quotes/quote.module";
     QuoteModule,
   ],
   controllers: [AppController],
-  providers: [DyanmoService, HelperService, AppService],
+  providers: [DyanmoService, AppService],
 })
 export class AppModule {}

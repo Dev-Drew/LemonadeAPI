@@ -5,7 +5,7 @@ import { Quote } from "src/quotes/models/quote";
 import { QuoteStatus } from "src/quotes/constants/quoteStatus.enum";
 import { PaymentInformation } from "./models/paymentInformation";
 import { StripeService } from "./stripe/stripe.service";
-import { HelperService } from "src/common/helper.service";
+import { IDValidationService } from "src/common/idValidation.service";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const open = require("open");
 
@@ -14,7 +14,7 @@ export class PaymentService {
   public constructor(
     private readonly stripeService: StripeService,
     private readonly dyanmoService: DyanmoService,
-    private readonly helperService: HelperService
+    private readonly helperService: IDValidationService
   ) {}
 
   public async createPaymentConfirmation(
