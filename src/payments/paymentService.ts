@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectStripe } from "nestjs-stripe";
+import { PaymentConfirmation } from "src/models/paymentConfirmation";
 import { Quote } from "src/models/quote";
 import { QuoteInput } from "src/models/quoteInput";
 import Stripe from "stripe";
@@ -18,7 +19,7 @@ export class PaymentService {
         {
           price_data: {
             currency: "usd",
-            unit_amount: quote.premium,
+            unit_amount: quote.premium * 100,
             product_data: {
               name: `Lemonade ${quote.coverageType.toLocaleUpperCase()} Insurance`,
               description: `Policy for ${quoteInput.firstName} ${quoteInput.lastName} covering residence at ${quoteInput.address}`,
@@ -34,5 +35,16 @@ export class PaymentService {
     });
 
     return session;
+  }
+
+  public createPaymentConfirmation(quote: Quote, session): PaymentConfirmation {
+    const paymentConfirmation: PaymentConfirmation = {
+      id: session.id,
+      amount: session.amount_total,
+      sessionCreatedDate: new Date(),
+      sessionExpirationDate: session.expires_at,
+      quoteId: quote.id,
+    };
+    return paymentConfirmation;
   }
 }

@@ -4,9 +4,11 @@ import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 import { HttpStatus } from "@nestjs/common";
 import { DocumentClient } from "aws-sdk/clients/dynamodb";
 import { AWSError } from "aws-sdk/lib/error";
+import { stat } from "fs";
 import { LemonadeDocument } from "src/models/lemonadeDocument";
 import { Policy } from "src/models/policy";
 import { Quote } from "src/models/quote";
+import { QuoteStatus } from "src/models/quoteStatus";
 import { TableNames } from "./TableNames.enum";
 
 const AWS = require("aws-sdk");
@@ -88,10 +90,15 @@ export class DyanmoService {
     });
   }
 
-  public async updateItem(quote: Quote): Promise<any> {
+  public async updateItem(quote: Quote, status?: any): Promise<any> {
     quote.lastUpdateTime = Date.now().toString();
+
+    if (status) {
+      quote.quoteDetails.status = status;
+    }
+    const tableName = this.determineTableName(quote);
     const params = {
-      TableName: TableNames.QUOTE_TABLE,
+      TableName: tableName,
       Item: {
         id: quote.id,
         quote: quote,

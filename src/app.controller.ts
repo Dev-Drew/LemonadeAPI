@@ -15,7 +15,7 @@ import { DyanmoService } from "./dyanmo/dyanmoService";
 import { PaymentConfirmation } from "./models/paymentConfirmation";
 import { Quote } from "./models/quote";
 import { QuoteInput } from "./models/quoteInput";
-import { PaymentService } from "./payments/payments";
+import { PaymentService } from "./payments/paymentService";
 import { QuoteStatus } from "./models/quoteStatus";
 import { PaymentInformation } from "./models/paymentProcessInput";
 import { SessionService } from "./payments/sessionService";
@@ -39,31 +39,23 @@ export class AppController {
     @Param("id") id,
     @Query("session_id") checkoutSession
   ): Promise<any> {
-    console.log("params: " + id);
-    console.log("session_id: " + checkoutSession);
-
-    const quote: Quote = await this.dyanmoService.getItem(id);
+    const quote: Quote = (await this.dyanmoService.getItem(id)).data;
     const session = await this.sessionService.retrieveStripeSession(
       checkoutSession
     );
-    console.log("session: " + JSON.stringify(session));
-    console.log("quote: " + JSON.stringify(quote));
 
-    //do more checks, break this into it's own function
-    if (
-      session.payment_status === "paid" &&
-      quote.quoteDetails.status === QuoteStatus.READY
-    ) {
-      const totalPaidByCustomer: number = session.amount_total;
+    if (this.policyService.isEligibleForPolicyCreation(quote, session)) {
+      const totalPaidByCustomer: number = session.amount_total / 100;
       const policy = this.policyService.createPolicy(
         quote,
         totalPaidByCustomer
       );
       const savedPolicy: Policy = await this.dyanmoService.postItem(policy);
+      await this.dyanmoService.updateItem(quote, QuoteStatus.DONE);
       return savedPolicy;
     } else {
       throw new HttpException(
-        "This quote has not been paid for " + id,
+        "There is an issue creating policy for quote with id: " + id,
         HttpStatus.BAD_REQUEST
       );
     }
@@ -71,7 +63,10 @@ export class AppController {
 
   @Get("/payment/failure")
   public paymentFailure(): any {
-    return "Payment Failure";
+    throw new HttpException(
+      "Unable to Process payment ",
+      HttpStatus.INTERNAL_SERVER_ERROR
+    );
   }
 
   @Get("/")
@@ -158,17 +153,22 @@ export class AppController {
       await this.dyanmoService.getItem(paymentInfomartion.id)
     ).data;
     console.log("Recieved quote for client with ID: " + JSON.stringify(quote));
-    let checkoutSession;
+
+    let paymentConfirmation: PaymentConfirmation;
     if (QuoteStatus.READY === quote.quoteDetails.status) {
-      checkoutSession = await this.paymentService.processPayment(quote);
+      const checkoutSession = await this.paymentService.processPayment(quote);
       console.log("checkoutSession: " + JSON.stringify(checkoutSession));
       open(checkoutSession.url);
+      paymentConfirmation = this.paymentService.createPaymentConfirmation(
+        quote,
+        checkoutSession
+      );
     } else {
       throw new Error(
         `Quote is not in ${QuoteStatus.READY}, it must be in this status to process payment`
       );
     }
 
-    return checkoutSession;
+    return paymentConfirmation;
   }
 }

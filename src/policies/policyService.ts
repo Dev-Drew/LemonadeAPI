@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { Policy } from "src/models/policy";
 import { Quote } from "src/models/quote";
+import { QuoteStatus } from "src/models/quoteStatus";
 
 @Injectable()
 export class PolicyService {
@@ -21,6 +22,24 @@ export class PolicyService {
 
     console.log("CREATED POLICY: " + policy);
     return policy;
+  }
+
+  public isEligibleForPolicyCreation(quote: Quote, session) {
+    const isClientPaid = session.payment_status === "paid";
+    const isStatusReady = quote.quoteDetails.status === QuoteStatus.READY;
+    const isSessionValid = !session.after_expiration;
+    const isCorrectPaymentAmount =
+      session.amount_subtotal === quote.premium * 100;
+    const policyCanBeCreated =
+      isClientPaid && isStatusReady && isSessionValid && isCorrectPaymentAmount;
+
+    if (!policyCanBeCreated) {
+      console.log(
+        `isClientPaid: ${isClientPaid}, isStatusReady: ${isStatusReady}, isSessionValid: ${isSessionValid}, isCorrectPaymentAmount: ${isCorrectPaymentAmount} `
+      );
+    }
+
+    return policyCanBeCreated;
   }
 
   private createPolicyId(): string {

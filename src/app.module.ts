@@ -3,7 +3,7 @@ import { StripeModule } from "nestjs-stripe";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { DyanmoService } from "./dyanmo/dyanmoService";
-import { PaymentService } from "./payments/payments";
+import { PaymentService } from "./payments/paymentService";
 import { SessionService } from "./payments/sessionService";
 import { PolicyService } from "./policies/policyService";
 
