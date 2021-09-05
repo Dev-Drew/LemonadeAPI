@@ -2,11 +2,11 @@ import { Module } from "@nestjs/common";
 import { StripeModule } from "nestjs-stripe";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
-import { DyanmoService } from "./dyanmo/dyanmoService";
-import { PaymentService } from "./payments/paymentService";
-import { SessionService } from "./payments/sessionService";
-import { PolicyService } from "./policies/policyService";
-import { QuoteService } from "./quotes/quote.service";
+import { HelperService } from "./common/helper.service";
+import { DyanmoService } from "./dyanmo/dyanmo.service";
+import { PaymentsModule } from "./payments/payments.module";
+import { PolicyModule } from "./policies/policy.module";
+import { QuoteModule } from "./quotes/quote.module";
 
 @Module({
   imports: [
@@ -15,15 +15,11 @@ import { QuoteService } from "./quotes/quote.service";
         "sk_test_51JVNu0LvFtdPa1wmNLgNXZy3whQzCa7ojb3DG8aMEWmxfwNCXTlz2yWvp27aRQLQFL0pFecfJol7kPvo87DWlrZC00kO6GJOhM",
       apiVersion: "2020-08-27",
     }),
+    PolicyModule,
+    PaymentsModule,
+    QuoteModule,
   ],
   controllers: [AppController],
-  providers: [
-    AppService,
-    DyanmoService,
-    PaymentService,
-    SessionService,
-    PolicyService,
-    QuoteService,
-  ],
+  providers: [DyanmoService, HelperService, AppService],
 })
 export class AppModule {}

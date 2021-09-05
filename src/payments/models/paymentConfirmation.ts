@@ -1,8 +1,16 @@
-import { LemonadeDocument } from "../../models/lemonadeDocument";
+import { IsNotEmpty, IsNumber, IsString } from "class-validator";
+import { LemonadeDocument } from "../../common/models/lemonadeDocument";
 
-export interface PaymentConfirmation extends LemonadeDocument {
+export class PaymentConfirmation extends LemonadeDocument {
+  @IsNotEmpty()
+  @IsNumber()
   amount: number;
+
+  @IsNotEmpty()
+  @IsString()
   quoteId: string;
-  confirmationDate: Date;
+
+  confirmationDate?: Date;
+
   sessionExpirationDate?: Date;
 }

@@ -32,12 +32,12 @@ function createPolicy(policyData) {
   };
 }
 
-function payWithMortgage(paymentData) {
+function payWithmortage(paymentData) {
   return {
-    mortgageId: paymentData.mortgageId,
+    mortageId: paymentData.mortageId,
     quoteId: paymentData.quoteId,
     success: true,
   };
 }
 
-module.exports = { createQuote, createPolicy, payWithMortgage };
+module.exports = { createQuote, createPolicy, payWithmortage };

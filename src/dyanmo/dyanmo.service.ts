@@ -1,18 +1,16 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import { GetItemOutput } from "@aws-sdk/client-dynamodb";
-import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 import { HttpStatus } from "@nestjs/common";
 import { DocumentClient } from "aws-sdk/clients/dynamodb";
 import { AWSError } from "aws-sdk/lib/error";
-import { LemonadeDocument } from "src/models/lemonadeDocument";
-import { Quote } from "src/quotes/models/quote";
+import { LemonadeDocument } from "src/common/models/lemonadeDocument";
+import { PolicyStatus } from "src/policies/constants/policyStatus.enum";
+import { QuoteStatus } from "src/quotes/constants/quoteStatus.enum";
 import { TableNames } from "./constants/TableNames.enum";
 
 const AWS = require("aws-sdk");
 
 export class DyanmoService {
-  constructor(private client: DynamoDBDocumentClient) {}
-
   public async postItem(itemToBeSaved: LemonadeDocument): Promise<any> {
     const docClient = new AWS.DynamoDB.DocumentClient();
 
@@ -42,12 +40,13 @@ export class DyanmoService {
     const params = this.createParams(id);
     console.log("PARAMS: " + JSON.stringify(params));
     return new Promise((resolve, reject) => {
-      docClient.get(params, (error: AWSError, data: GetItemOutput) => {
+      docClient.get(params, (error: AWSError, getItemOutput: GetItemOutput) => {
         if (error) {
           console.log("ERROR: " + JSON.stringify(error));
           reject(error);
         } else {
-          resolve(data.Item);
+          console.log("DATA: " + JSON.stringify(getItemOutput));
+          resolve(getItemOutput?.Item?.data);
         }
       });
     }).then((data) => {
@@ -55,10 +54,10 @@ export class DyanmoService {
     });
   }
 
-  public async getAllItems(): Promise<any> {
+  public async getAllItems(tableName: TableNames): Promise<any> {
     const docClient: DocumentClient = new AWS.DynamoDB.DocumentClient();
     const params = {
-      TableName: TableNames.QUOTE_TABLE,
+      TableName: tableName,
     };
     return new Promise((resolve, reject) => {
       docClient.scan(params, (error: AWSError, data) => {
@@ -73,14 +72,15 @@ export class DyanmoService {
     });
   }
 
-  public async updateItem(quote: Quote, status?: any): Promise<any> {
+  public async updateItem(
+    item: LemonadeDocument,
+    status?: QuoteStatus | PolicyStatus
+  ): Promise<any> {
     const docClient: DocumentClient = new AWS.DynamoDB.DocumentClient();
-    quote.lastUpdateTime = new Date();
+    item.lastUpdateTime = new Date();
 
-    if (status) {
-      quote.quoteDetails.status = status;
-    }
-    const params = this.createParams(quote.id, quote);
+    item = this.updateStatus(item, status);
+    const params = this.createParams(item.id, item);
     return new Promise((resolve, reject) => {
       docClient.put(params, (error: AWSError) => {
         if (error) {
@@ -98,7 +98,7 @@ export class DyanmoService {
     const docClient: DocumentClient = new AWS.DynamoDB.DocumentClient();
     const params = this.createParams(id);
 
-    console.log("Trying to delete quote with id " + id);
+    console.log("Trying to item with id " + id);
     return new Promise((resolve, reject) => {
       docClient.delete(params, (error: AWSError, data) => {
         if (error) {
@@ -116,7 +116,6 @@ export class DyanmoService {
 
   private createParams(id: string, item?: any): any {
     const tableName = this.determineTableName(id);
-    console.log("ITEM being saved: " + JSON.stringify(item));
     const params = {
       TableName: tableName,
       Item: {
@@ -136,5 +135,19 @@ export class DyanmoService {
       tableName = TableNames.POLICY_TABLE;
     }
     return tableName;
+  }
+
+  private updateStatus(
+    item: any,
+    status: QuoteStatus | PolicyStatus
+  ): LemonadeDocument {
+    if (status) {
+      if (item.quoteDetails) {
+        item.quoteDetails.status = status;
+      } else if (item.effectiveDate) {
+        item.policyStatus = status;
+      }
+    }
+    return item;
   }
 }

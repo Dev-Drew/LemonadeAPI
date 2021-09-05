@@ -29,6 +29,8 @@
     "@nestjs/serve-static": "^2.2.2",
     "@stripe/stripe-js": "^1.17.1",
     "aws-sdk": "^2.978.0",
+    "class-transformer": "^0.4.0",
+    "class-validator": "^0.13.1",
     "nestjs-stripe": "^0.4.1",
     "open": "^8.2.1",
     "reflect-metadata": "^0.1.13",
