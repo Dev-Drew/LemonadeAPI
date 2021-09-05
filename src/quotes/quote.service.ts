@@ -1,11 +1,11 @@
 import { Injectable } from "@nestjs/common";
-import { CoverageType } from "./models/coverageType.enum";
-import { Quote } from "./quotes/models/quote";
-import { QuoteInput } from "./quotes/models/quoteInput";
-import { QuoteStatus } from "./quotes/models/quoteStatus";
+import { CoverageType } from "src/models/coverageType.enum";
+import { Quote } from "./models/quote";
+import { QuoteInput } from "./models/quoteInput";
+import { QuoteStatus } from "./models/quoteStatus";
 
 @Injectable()
-export class AppService {
+export class QuoteService {
   public createQuote(quoteData: QuoteInput): Quote {
     const quote: Quote = {
       premium: 500,
@@ -16,8 +16,6 @@ export class AppService {
         clientDetails: quoteData,
       },
     };
-
     return quote;
   }
-  //TODO : Determine preimum dynamically
 }

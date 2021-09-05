@@ -1,5 +1,5 @@
-import { CoverageType } from "./coverageType.enum";
-import { LemonadeDocument } from "./lemonadeDocument";
+import { CoverageType } from "../../models/coverageType.enum";
+import { LemonadeDocument } from "../../models/lemonadeDocument";
 import { QuoteDetails } from "./quoteDetails";
 
 export interface Quote extends LemonadeDocument {

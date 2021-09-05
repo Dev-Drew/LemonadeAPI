@@ -12,15 +12,15 @@ import {
 } from "@nestjs/common";
 import { AppService } from "./app.service";
 import { DyanmoService } from "./dyanmo/dyanmoService";
-import { PaymentConfirmation } from "./models/paymentConfirmation";
-import { Quote } from "./models/quote";
-import { QuoteInput } from "./models/quoteInput";
+import { PaymentConfirmation } from "./payments/models/paymentConfirmation";
+import { Quote } from "./quotes/models/quote";
+import { QuoteInput } from "./quotes/models/quoteInput";
 import { PaymentService } from "./payments/paymentService";
-import { QuoteStatus } from "./models/quoteStatus";
-import { PaymentInformation } from "./models/paymentProcessInput";
+import { QuoteStatus } from "./quotes/models/quoteStatus";
+import { PaymentInformation } from "./payments/models/paymentProcessInput";
 import { SessionService } from "./payments/sessionService";
 import { PolicyService } from "./policies/policyService";
-import { Policy } from "./models/policy";
+import { Policy } from "./policies/models/policy";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const open = require("open");
 

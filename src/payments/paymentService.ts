@@ -1,8 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import { InjectStripe } from "nestjs-stripe";
-import { PaymentConfirmation } from "src/models/paymentConfirmation";
-import { Quote } from "src/models/quote";
-import { QuoteInput } from "src/models/quoteInput";
+import { PaymentConfirmation } from "src/payments/models/paymentConfirmation";
+import { Quote } from "src/quotes/models/quote";
+import { QuoteInput } from "src/quotes/models/quoteInput";
 import Stripe from "stripe";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const YOUR_DOMAIN = "http://localhost:3000";

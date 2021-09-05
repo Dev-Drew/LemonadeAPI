@@ -6,6 +6,7 @@ import { DyanmoService } from "./dyanmo/dyanmoService";
 import { PaymentService } from "./payments/paymentService";
 import { SessionService } from "./payments/sessionService";
 import { PolicyService } from "./policies/policyService";
+import { QuoteService } from "./quotes/quote.service";
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { PolicyService } from "./policies/policyService";
     PaymentService,
     SessionService,
     PolicyService,
+    QuoteService,
   ],
 })
 export class AppModule {}

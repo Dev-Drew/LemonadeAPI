@@ -5,8 +5,8 @@ import { HttpStatus } from "@nestjs/common";
 import { DocumentClient } from "aws-sdk/clients/dynamodb";
 import { AWSError } from "aws-sdk/lib/error";
 import { LemonadeDocument } from "src/models/lemonadeDocument";
-import { Quote } from "src/models/quote";
-import { TableNames } from "./TableNames.enum";
+import { Quote } from "src/quotes/models/quote";
+import { TableNames } from "./constants/TableNames.enum";
 
 const AWS = require("aws-sdk");
 

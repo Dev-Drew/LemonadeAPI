@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
-import { Policy } from "src/models/policy";
-import { Quote } from "src/models/quote";
-import { QuoteStatus } from "src/models/quoteStatus";
+import { Policy } from "src/policies/models/policy";
+import { Quote } from "src/quotes/models/quote";
+import { QuoteStatus } from "src/quotes/models/quoteStatus";
 
 @Injectable()
 export class PolicyService {

@@ -1,4 +1,4 @@
-import { LemonadeDocument } from "./lemonadeDocument";
+import { LemonadeDocument } from "../../models/lemonadeDocument";
 
 export interface PaymentConfirmation extends LemonadeDocument {
   amount: number;
