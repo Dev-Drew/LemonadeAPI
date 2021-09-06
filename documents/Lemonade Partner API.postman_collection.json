@@ -1,0 +1,440 @@
+{
+	"info": {
+		"_postman_id": "0acef246-f8b2-4020-bccf-41732d316006",
+		"name": "Lemonade Partner API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Item by Id [Quote]",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/item/{QuoteID}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"item",
+						"{QuoteID}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Item by Id [Policy]",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/item/{PolicyID}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"item",
+						"{PolicyID}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Quote",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"firstName\": \"Tyler\",\n\t\"lastName\": \"Clark\",\n\t\"email\": \"dclark6783@gmail.com\",\n\t\"birthDate\": \"2/1/1995\",\n    \"address\": \"2606 Park Road, Charlotte NC\",\n    \"propertySize\": \"800\",\n    \"propertyYearBuilt\": \"2017\",\n    \"deductible\": \"2000\"    \n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/quote",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"quote"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Quotes",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/quotes",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"quotes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Payment Confirmation [Stripe]",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\": \"{QuoteID}\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/paymentConfirmation",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"paymentConfirmation"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Payment Confirmation [Mortage]",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\": \"{QUOTEID}\",\n    \"mortageId\": \"MID163084932900\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/paymentConfirmation",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"paymentConfirmation"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Policy [Stripe]",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": \"{STRIPE SESSION}\",\r\n    \"amount\": 500,\r\n    \"quoteId\": \"LQ2308307141764\",\r\n    \"confirmationDate\": \"2021-09-05T18:06:50.965Z\",\r\n    \"success\": true\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/policy",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"policy"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Policy [Mortage]",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": \"MID163084932900\",\r\n    \"amount\": 500,\r\n    \"quoteId\": \"LQ2429363154132\",\r\n    \"confirmationDate\": \"2021-09-05T18:06:50.965Z\",\r\n    \"success\": true\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/policy",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"policy"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Policies",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "http://localhost:3000/api/policies",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"policies"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update  Item [Quote]",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"quoteDetails\": {\r\n        \"clientDetails\": {\r\n            \"firstName\": \"Drew\",\r\n            \"lastName\": \"Clark\",\r\n            \"address\": \"1234\",\r\n            \"propertyYearBuilt\": \"2017\",\r\n            \"birthDate\": \"2/1/1995\",\r\n            \"email\": \"dclark6783@gmail.com\",\r\n            \"propertySize\": \"12\"\r\n        },\r\n        \"status\": \"READY\"\r\n    },\r\n    \"premium\": 800,\r\n    \"id\": \"LQ2429363154132\"\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/item/LQ2429363154132",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"item",
+						"LQ2429363154132"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update  Item [Policy]",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": \"LP2729558958854\",\r\n    \"quoteId\": \"LQ1630849329064\",\r\n    \"effectiveDate\": \"2021-09-05T18:50:09.140Z\",\r\n    \"lengthOfTerm\": 12,\r\n    \"coverageType\": \"HOME\",\r\n    \"deductible\": 2000,\r\n    \"preimum\": 500,\r\n    \"policyStatus\": \"ACTIVE\"\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/item/LP2729558958854",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"item",
+						"LP2729558958854"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Item [Quote]",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/item/LQ1630777733711",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"item",
+						"LQ1630777733711"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Item [Policy]",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/item/{POLICYID}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"item",
+						"{POLICYID}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Payment Failure",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/payment/failure",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"payment",
+						"failure"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Payment Success",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/payment/success",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"payment",
+						"success"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
