@@ -101,20 +101,17 @@ export class PaymentService {
     quote: Quote,
     quoteOnPayInfomartion: string
   ): boolean {
-    let isValid = false;
+    const isValid = true;
     if (quote) {
-      if (this.helperService.isValidQuoteId(quote.id)) {
-        if (quote.quoteDetails.status === QuoteStatus.READY) {
-          isValid = true;
-        } else {
-          throw new HttpException(
-            `Quote is not in the Ready status`,
-            HttpStatus.BAD_REQUEST
-          );
-        }
-      } else {
+      if (quote.quoteDetails.status !== QuoteStatus.READY) {
         throw new HttpException(
-          `ID is not a valid quote ID: ${quote.id}`,
+          `Quote is in Status ${quote.quoteDetails.status}, it needs to be in ${QuoteStatus.READY}`,
+          HttpStatus.BAD_REQUEST
+        );
+      }
+      if (quote.id !== quoteOnPayInfomartion) {
+        throw new HttpException(
+          `The quoteId on the payment confirmation ${quoteOnPayInfomartion} does not match the given the quote ${quote.id}`,
           HttpStatus.BAD_REQUEST
         );
       }
