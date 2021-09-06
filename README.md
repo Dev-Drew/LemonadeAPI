@@ -2,6 +2,20 @@
 
 Take home interview assignment from 8/31/2021 to be returned on 9/7/2021 to Lemonade
 
+## Main Features
+ - User can provide a "quoteInput" object to store a "quote" in a Dyanmo Table ("QuotesTable")
+ - User can query both "QuotesTable" and "PoliciesTable" for individual records given matching IDs
+ - User can make a request to return all records in both "QuotesTable" and "PoliciesTable"
+ - User can create a "PaymentConfirmation" object given a valid quoteId
+   -  If correctly formatted "mortgageId" is provide then a paymentConfirmation will be returned with the Id of the mortgageID 
+   -  If no "mortgageId" is provided a stripeCheckoutSession will be created with the Id of the mortgageID
+   -  In order to proceed to creating a policy a the checkoutSession must be marked as "PAID"
+ - User can provide a valid "PaymentConfirmation" contraining either a mortgageId or valid stripe session token to create a policy.
+   - User may only create Policies for quotes that are in the "READY status
+   - quoteId stored on the payment confirmation MUSt match the given quoteId
+  - User can delete both Quotes and Policies given the correct ID
+  - User can update both Quotes and Policies given the correct ID
+  
 
 
 ## Installation
@@ -50,11 +64,41 @@ My favorite for development is start:dev.
 ```bash
 npm run start:dev
 ```
+## Assumptions
+From Requirements
+    - Preiumum is always $500
+    - Stripe is used to process payment if mortgage ID is not provided
+    - No UI is required
+    - No deployment infrastructure is needed
+    - Quotes and Policies will only be for Home insurance 
+    
+Personal 
+    - QuoteIds will be random 15 characters start with "LQ"
+    - MortgageIds will be random 15 characters start with "MID"
+    - Any 15 character MortgageID string will be valid if it starts with "MID"
+    - PolicyIds will be random 15 characters start with "LP"
+    - User is always fully authenticated and authorized. 
+    - One quote is only good to create one policy (can not use the same quoteId to create multiple polices)
+    - Additional libraries / frameworks are allowed. 
+    - No requirement for test coverage
+    
 
 ## Usage
 
 Take a look at the api.yaml file I've included the project to see what type of requests you can make.
-Got no idea where to start? I've included a postman collection in the documents folder that has a some basic requests.
+
+Basic Flow
+1. Create a Quote using a "QuoteInput"
+2. Retrieve that Quote using its ID
+3. Create a payment confirmation using the ID of the quote.
+ 3.1.  Only providing an ID will attempt checkout through Stripe. You may include any valid mortgageId if you want to bypass Stripe (   "mortageId": "MID163084932900")
+4. Create a policy using the ID on the "PaymentConfirmation" from step 3
+5. Retrieve that Policy using the ID from step 4.
+
+
+Read all that and got no idea where to start? I've included a postman collection in the documents folder that has all the requests.
+
+##
 
 
 ## Tech Stack
