@@ -84,7 +84,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3000/api/quotes",
+					"raw": "http://localhost:3000/api/quote",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -92,7 +92,7 @@
 					"port": "3000",
 					"path": [
 						"api",
-						"quotes"
+						"quote"
 					]
 				}
 			},
@@ -175,7 +175,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"id\": \"{STRIPE SESSION}\",\r\n    \"amount\": 500,\r\n    \"quoteId\": \"LQ2308307141764\",\r\n    \"confirmationDate\": \"2021-09-05T18:06:50.965Z\",\r\n    \"success\": true\r\n}",
+					"raw": "{\r\n    \"id\": \"{STRIPE SESSION}\",\r\n    \"amount\": 500,\r\n    \"quoteId\": \"{QUOTEID USED TO CREATE THIS SESSION, MUST MATCH}\",\r\n    \"confirmationDate\": \"2021-09-05T18:06:50.965Z\",\r\n    \"success\": true\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -212,7 +212,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"id\": \"MID163084932900\",\r\n    \"amount\": 500,\r\n    \"quoteId\": \"LQ2429363154132\",\r\n    \"confirmationDate\": \"2021-09-05T18:06:50.965Z\",\r\n    \"success\": true\r\n}",
+					"raw": "{\r\n    \"id\": \"MID163084932900\",\r\n    \"amount\": 500,\r\n    \"quoteId\": \"{QUOTEID}\",\r\n    \"confirmationDate\": \"2021-09-05T18:06:50.965Z\",\r\n    \"success\": true\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -278,7 +278,7 @@
 					"raw": "{\r\n    \"quoteDetails\": {\r\n        \"clientDetails\": {\r\n            \"firstName\": \"Drew\",\r\n            \"lastName\": \"Clark\",\r\n            \"address\": \"1234\",\r\n            \"propertyYearBuilt\": \"2017\",\r\n            \"birthDate\": \"2/1/1995\",\r\n            \"email\": \"dclark6783@gmail.com\",\r\n            \"propertySize\": \"12\"\r\n        },\r\n        \"status\": \"READY\"\r\n    },\r\n    \"premium\": 800,\r\n    \"id\": \"LQ2429363154132\"\r\n}"
 				},
 				"url": {
-					"raw": "http://localhost:3000/api/item/LQ2429363154132",
+					"raw": "http://localhost:3000/api/item/{QUOTE_ID}",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -287,7 +287,7 @@
 					"path": [
 						"api",
 						"item",
-						"LQ2429363154132"
+						"{QUOTE_ID}"
 					]
 				}
 			},
@@ -309,7 +309,7 @@
 					"raw": "{\r\n    \"id\": \"LP2729558958854\",\r\n    \"quoteId\": \"LQ1630849329064\",\r\n    \"effectiveDate\": \"2021-09-05T18:50:09.140Z\",\r\n    \"lengthOfTerm\": 12,\r\n    \"coverageType\": \"HOME\",\r\n    \"deductible\": 2000,\r\n    \"preimum\": 500,\r\n    \"policyStatus\": \"ACTIVE\"\r\n}"
 				},
 				"url": {
-					"raw": "http://localhost:3000/api/item/LP2729558958854",
+					"raw": "http://localhost:3000/api/item/{POLICY_ID}",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -318,7 +318,7 @@
 					"path": [
 						"api",
 						"item",
-						"LP2729558958854"
+						"{POLICY_ID}"
 					]
 				}
 			},
@@ -330,7 +330,7 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3000/api/item/LQ1630777733711",
+					"raw": "http://localhost:3000/api/item/{QUOTEID}",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -339,7 +339,7 @@
 					"path": [
 						"api",
 						"item",
-						"LQ1630777733711"
+						"{QUOTEID}"
 					]
 				}
 			},
