@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
-/* eslint-disable @typescript-eslint/no-var-requires */
 import { MailerService } from "@nestjs-modules/mailer";
 import { Injectable } from "@nestjs/common";
 import { Policy } from "src/policies/models/policy";
@@ -9,7 +7,6 @@ export class EmailService {
   constructor(private readonly mailerService: MailerService) {}
 
   public sendEmail(policy: Policy, email: string, firstName: string): void {
-    console.log("SENDING EMAIL TO: " + email);
     this.mailerService
       .sendMail({
         to: email,
@@ -26,10 +23,10 @@ export class EmailService {
         Drew`,
       })
       .then(() => {
-        console.log("SENT");
+        console.log(`Success! Email send to ${email}`);
       })
       .catch((error) => {
-        console.log("ERROR SENDING EMAIL: " + JSON.stringify(error));
+        console.log(`Error! Email did not send. Error: ${error}`);
       });
   }
 }

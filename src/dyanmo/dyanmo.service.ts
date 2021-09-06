@@ -63,7 +63,7 @@ export class DyanmoService {
         if (error) {
           reject(error);
         } else {
-          resolve(data);
+          resolve(data?.Items);
         }
       });
     }).then((data) => {
@@ -76,7 +76,8 @@ export class DyanmoService {
     status?: QuoteStatus | PolicyStatus
   ): Promise<any> {
     const docClient: DocumentClient = new AWS.DynamoDB.DocumentClient();
-    item.lastUpdateTime = new Date();
+
+    item.lastUpdateTime = new Date().toDateString();
 
     item = this.updateStatus(item, status);
     const params = this.createParams(item.id, item);

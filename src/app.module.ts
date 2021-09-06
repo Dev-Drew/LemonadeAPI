@@ -1,5 +1,6 @@
 import { MailerModule } from "@nestjs-modules/mailer";
 import { Module } from "@nestjs/common";
+import { ConfigModule } from "@nestjs/config";
 import { StripeModule } from "nestjs-stripe";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
@@ -10,9 +11,9 @@ import { QuoteModule } from "./quotes/quote.module";
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     StripeModule.forRoot({
-      apiKey:
-        "sk_test_51JVNu0LvFtdPa1wmNLgNXZy3whQzCa7ojb3DG8aMEWmxfwNCXTlz2yWvp27aRQLQFL0pFecfJol7kPvo87DWlrZC00kO6GJOhM",
+      apiKey: process.env.STRIPE_TEST_KEY,
       apiVersion: "2020-08-27",
     }),
     PolicyModule,
@@ -26,8 +27,8 @@ import { QuoteModule } from "./quotes/quote.module";
         ignoreTLS: true,
         secure: false,
         auth: {
-          user: "2a798c947a2ebe",
-          pass: "8eb3c831254231",
+          user: process.env.MAILTRAP_USER,
+          pass: process.env.MAILTRAP_PASS,
         },
       },
     }),

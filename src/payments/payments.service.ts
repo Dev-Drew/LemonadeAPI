@@ -5,7 +5,7 @@ import { Quote } from "src/quotes/models/quote";
 import { QuoteStatus } from "src/quotes/constants/quoteStatus.enum";
 import { PaymentInformation } from "./models/paymentInformation";
 import { StripeService } from "./stripe/stripe.service";
-import { IDValidationService } from "src/common/idValidation.service";
+import { IDValidationService } from "src/common/services/idValidation.service";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const open = require("open");
 
@@ -101,20 +101,17 @@ export class PaymentService {
     quote: Quote,
     quoteOnPayInfomartion: string
   ): boolean {
-    let isValid = false;
+    const isValid = true;
     if (quote) {
-      if (this.helperService.isValidQuoteId(quote.id)) {
-        if (quote.quoteDetails.status === QuoteStatus.READY) {
-          isValid = true;
-        } else {
-          throw new HttpException(
-            `Quote is no in the ready status`,
-            HttpStatus.BAD_REQUEST
-          );
-        }
-      } else {
+      if (quote.quoteDetails.status !== QuoteStatus.READY) {
         throw new HttpException(
-          `ID is not a valid quote id: ${quote.id}`,
+          `Quote is in Status ${quote.quoteDetails.status}, it needs to be in ${QuoteStatus.READY}`,
+          HttpStatus.BAD_REQUEST
+        );
+      }
+      if (quote.id !== quoteOnPayInfomartion) {
+        throw new HttpException(
+          `The quoteId on the payment confirmation ${quoteOnPayInfomartion} does not match the given the quote ${quote.id}`,
           HttpStatus.BAD_REQUEST
         );
       }

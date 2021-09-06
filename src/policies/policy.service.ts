@@ -9,6 +9,8 @@ import { Stripe } from "stripe";
 import { PolicyStatus } from "./constants/policyStatus.enum";
 import { AppService } from "src/app.service";
 import { EmailService } from "src/email/email.service";
+import { IDValidationService } from "src/common/services/idValidation.service";
+import { SupportFunctionsService } from "src/common/services/supportFunctions.service";
 
 @Injectable()
 export class PolicyService {
@@ -16,7 +18,9 @@ export class PolicyService {
     private readonly appService: AppService,
     private readonly stripeService: StripeService,
     private readonly dyanmoService: DyanmoService,
-    private readonly emailService: EmailService
+    private readonly emailService: EmailService,
+    private readonly idValidationService: IDValidationService,
+    private readonly supportFunctionsService: SupportFunctionsService
   ) {}
 
   public async createPolicy(
@@ -26,7 +30,7 @@ export class PolicyService {
       paymentConfirmation.quoteId
     );
 
-    if (this.isEligibleForPolicyCreation(paymentConfirmation, quote)) {
+    if (await this.isEligibleForPolicyCreation(paymentConfirmation, quote)) {
       const policy = this.createPolicyObject(quote);
       const savedPolicy: Policy = await this.dyanmoService.postItem(policy);
       await this.dyanmoService.updateItem(quote, QuoteStatus.DONE);
@@ -47,25 +51,22 @@ export class PolicyService {
   private async isEligibleForPolicyCreation(
     paymentConfirmation: PaymentConfirmation,
     quote: Quote
-  ) {
+  ): Promise<boolean> {
     let isEligible = false;
-    if (quote) {
-      if (paymentConfirmation.quoteId === quote.id) {
-        if (this.isIncludedWithMortage(paymentConfirmation.id)) {
-          isEligible = true;
-        } else {
-          isEligible = await this.isStripePaymentEligible(
-            quote,
-            paymentConfirmation
-          );
-        }
-        return isEligible;
+
+    if (
+      this.isQuoteEligibleForPolicyCreation(quote, paymentConfirmation.quoteId)
+    ) {
+      if (this.idValidationService.isValidMortageId(paymentConfirmation.id)) {
+        isEligible = true;
       } else {
-        return Error(
-          "This payment confirmation does not match the Id on the quote"
+        isEligible = await this.isStripePaymentEligible(
+          quote,
+          paymentConfirmation
         );
       }
     }
+    return isEligible;
   }
 
   private createPolicyObject(quote: Quote): Policy {
@@ -89,9 +90,10 @@ export class PolicyService {
   private async isStripePaymentEligible(
     quote: Quote,
     paymentConfirmation: PaymentConfirmation
-  ) {
+  ): Promise<boolean> {
     const session: Stripe.Response<Stripe.Checkout.Session> =
       await this.stripeService.retrieveStripeSession(paymentConfirmation.id);
+
     const isClientPaid = session.payment_status === "paid";
     const isStatusReady = quote.quoteDetails.status === QuoteStatus.READY;
 
@@ -110,22 +112,31 @@ export class PolicyService {
   }
 
   private createPolicyId(): string {
-    const policyId = "LP" + this.randomFixedInteger(13);
+    const policyId = "LP" + this.supportFunctionsService.randomFixedInteger(13);
     return policyId;
+  }
+
+  private isQuoteEligibleForPolicyCreation(
+    quote: Quote,
+    paymentConfirmationQuoteId: string
+  ): boolean {
+    let isEligible = false;
+    if (quote) {
+      const isCorrectQuoteForPolicy = paymentConfirmationQuoteId === quote.id;
+      const isStatusReady = quote.quoteDetails.status === QuoteStatus.READY;
+      isEligible = isCorrectQuoteForPolicy && isStatusReady;
+    }
+
+    if (!isEligible) {
+      throw new HttpException(
+        `Quote can not be created policy for this quote, make the quoteId on the payment confirmation matches and this quote is in Status ${QuoteStatus.READY} `,
+        HttpStatus.BAD_REQUEST
+      );
+    }
+    return isEligible;
   }
 
   private determineEffectiveDate(quote: Quote): Date {
     return quote.quoteDetails.effectiveDate || new Date();
-  }
-
-  private isIncludedWithMortage(id: string) {
-    return id.slice(0, 3) === "MID" ? true : false;
-  }
-
-  private randomFixedInteger(length) {
-    return Math.floor(
-      Math.pow(10, length - 1) +
-        Math.random() * (Math.pow(10, length) - Math.pow(10, length - 1) - 1)
-    );
   }
 }

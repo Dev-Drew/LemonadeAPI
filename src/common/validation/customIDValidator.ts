@@ -4,7 +4,7 @@ import {
   HttpException,
   HttpStatus,
 } from "@nestjs/common";
-import { IDPrefixes } from "../constants/quotePrefixes.enum";
+import { IDPrefixes } from "../constants/IDPrefixes.enum";
 
 export const IsValidQuoteOrPolicyID = createParamDecorator(
   (data, ctx: ExecutionContext) => {
