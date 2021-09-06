@@ -28,7 +28,7 @@ export class QuoteController {
     const savedQuote: Quote = await this.dyanmoService.postItem(quote);
     return savedQuote;
   }
-  @Get("/quotes")
+  @Get("/quote")
   public async getAllQuotes(): Promise<any> {
     console.log("Retrieve all clients from table");
     const data = await this.dyanmoService.getAllItems(TableNames.QUOTE_TABLE);

@@ -7,8 +7,8 @@ export class IDValidationService {
     return this.isValidQuoteId(id) || this.isValidPolicyId(id);
   }
 
-  public isValidMortageId(id: string): boolean {
-    const correctPrefix: boolean = this.isMortageId(id);
+  public isValidMortgageId(id: string): boolean {
+    const correctPrefix: boolean = this.isMortgageId(id);
     const correctLength = this.isCorrectLenth(id, 15);
     return correctPrefix && correctLength;
   }
@@ -33,7 +33,7 @@ export class IDValidationService {
     return id.slice(0, 2) === IDPrefixes.QUOTE_PREFIX ? true : false;
   }
 
-  public isMortageId(id: string): boolean {
+  public isMortgageId(id: string): boolean {
     return id.slice(0, 3) === IDPrefixes.MORTAGE_PREFIX ? true : false;
   }
 

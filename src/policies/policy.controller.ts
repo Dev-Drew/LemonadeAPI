@@ -32,7 +32,7 @@ export class PolicyController {
     return policy;
   }
 
-  @Get("/policies")
+  @Get("/policy")
   public async getAllPolicies(): Promise<any> {
     console.log("Retrieve all clients from table");
     const data = await this.dyanmoService.getAllItems(TableNames.POLICY_TABLE);

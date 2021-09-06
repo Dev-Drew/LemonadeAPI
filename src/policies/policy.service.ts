@@ -57,7 +57,7 @@ export class PolicyService {
     if (
       this.isQuoteEligibleForPolicyCreation(quote, paymentConfirmation.quoteId)
     ) {
-      if (this.idValidationService.isValidMortageId(paymentConfirmation.id)) {
+      if (this.idValidationService.isValidMortgageId(paymentConfirmation.id)) {
         isEligible = true;
       } else {
         isEligible = await this.isStripePaymentEligible(
