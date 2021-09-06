@@ -1,71 +1,388 @@
-openapi: 3.0.0
+swagger: "2.0"
 info:
-  version: 1.0.0
-  title: LemonadePartnerAPI
-servers:
-  - url: 'https://petstore.swagger.io/v1'
+  description: "This API provides access to partners to create, retrieve, update and delete home insurance quotes and policies. It provides a payment portal using Stripe or payment can be bundled with a given mortgage ID."
+  version: "1.0.0"
+  title: "Lemonade Partner API"
+  termsOfService: "http://swagger.io/terms/"
+  contact:
+    email: "dclark6783@gmail.com"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "localhost:3000"
+basePath: "/api"
+tags:
+- name: "Items"
+  description: "Basic Table Operations"
+  externalDocs:
+    description: "Find out more"
+    url: "http://swagger.io"
+- name: "Quote"
+  description: "Everthing to do with creating Quotes"
+- name: "Payment"
+  description: "Pay with you or with this"
+  externalDocs:
+    description: "Find out more about our store"
+    url: "http://swagger.io"
+- name: "Policy"
+  description: "We've got you covered"
+  externalDocs:
+    description: ""
+    url: "http://swagger.io"  
+schemes:
+- "http"
 paths:
-  /user:
+  /item{id}:
     get:
-      summary: 'Sample endpoint: Returns details about a particular user'
-      operationId: listUser
       tags:
-        - user
+      - "Items"
+      summary: "Retrieve a quote or policy "
+      description: ""
+      operationId: "retrieve"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
       parameters:
-        - name: id
-          in: query
-          description: ID of the user
-          required: true
-          schema:
-            type: integer
-            format: int32
+      - in: "path"
+        type: "string"
+        name: "id"
+        description: "An id for quote or a policy"
+        required: true
       responses:
-        '200':
-          description: 'Sample response: Details about a user by ID'
-          headers:
-            x-next:
-              description: A link to the next page of responses
-              schema:
-                type: string
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
-        default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-components:
-  schemas:
-    User:
-      type: object
-      required:
-        - id
-        - name
-      properties:
-        id:
-          type: integer
-          format: int64
-        name:
-          type: string
-        tag:
-          type: string
-    Error:
-      type: object
-      required:
-        - code
-        - message
-      properties:
-        code:
-          type: integer
-          format: int32
-        message:
-          type: string
-  securitySchemes:
-    BasicAuth:
-      type: http
-      scheme: basic
-security:
-  - BasicAuth: []
+        "200":
+          description: "Scucess"
+          schema: 
+            $ref: "#/definitions/Quote"
+        "405":
+          description: "Invalid input"
+    put:
+      tags:
+      - "Items"
+      summary: "Update an existing quote or policy"
+      description: ""
+      operationId: "updateItem"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        type: "string"
+        name: "id"
+        description: "An id for quote or a policy"
+        required: true
+      - in: "body"
+        name: "Quote"
+        description: "Quote that needs to be added"
+        required: true
+        schema:
+          $ref: "#/definitions/Quote"
+      responses:
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "Not found"
+    delete:
+      tags:
+      - "Items"
+      summary: "Delete an existing quote or policy"
+      description: "Deletes an existing Quote or Policy from the appropriate table "
+      operationId: "delete"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        type: "string"
+        name: "id"
+        description: "An id for an existing quote or a policy"
+        required: true
+      responses:
+        "200":
+          description: "successful operation"
+        "400":
+          description: "Invalid status value"
+  /quotes:
+    get:
+      tags:
+      - "Quote"
+      summary: "Return all quotes stored in table"
+      description: "Muliple tags can be provided with comma separated strings. Use         tag1, tag2, tag3 for testing."
+      operationId: "getAllQuotes"
+      produces:
+      - "application/json"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Quote"
+        "400":
+          description: "Invalid tag value"
+    post:
+      tags:
+      - "Quote"
+      summary: "Creates a home insurance quote"
+      description: "Each quote generates a unque ID and is saved in QuotesTable"
+      operationId: "createQuote"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Quote Input Object"
+        required: true
+        schema:
+          $ref: "#/definitions/QuoteInput"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Quote"
+        "400":
+          description: "Invalid username supplied"
+        "404":
+          description: "User not found"
+  /Payment:
+    post:
+      tags:
+      - "Payment"
+      summary: "Creates a PaymentConfirmation given a valid PaymentInformation"
+      description: "If no mortgageID is provided, a stripe session will be created. It is only valid for 24 hours."
+      operationId: "createPaymentConfirmation"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Requires a PaymentInformation object. Includes the Id of a saved quote. Opitional mortgageId"
+        required: true
+        schema:
+          $ref: "#/definitions/PaymentInformation"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/PaymentConfirmation"
+        "400":
+          description: "Invalid username supplied"
+        "404":
+          description: "User not found"
+  /Policy:
+    get:
+      tags:
+      - "Policy"
+      summary: "Return all policies stored in table"
+      description: "All policies stored in PoliciesTable will be returned"
+      operationId: "getAllPolicies"
+      produces:
+      - "application/json"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Policy"
+        "400":
+          description: "Invalid tag value"
+    post:
+      tags:
+      - "Policy"
+      summary: "Creates a Policy given a valid PaymentConfirmation"
+      description: "The ID contained in the payment information must be a valid mortgageID or stripe session token."
+      operationId: "createPolicy"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Requires a PaymentConfirmation object."
+        required: true
+        schema:
+          $ref: "#/definitions/PaymentConfirmation"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Policy"
+        "400":
+          description: "Invalid username supplied"
+        "404":
+          description: "User not found"
+definitions:
+  Quote:
+    type: "object"
+    required:
+    - "id"
+    - "premium"
+    - "coverageType"
+    - "quoteDetails"
+    properties:
+      id:
+        type: "string"
+        example: "LP2729558958854"
+      createdTime:
+        type: "string"
+        format: "date-time"
+      lastUpdateTime:
+        type: "string"
+        format: "date-time"
+      premium:
+        type: "number"
+        example: 500
+      coverageType:
+        type: "string"
+        description: "Coverage Type"
+        enum:
+        - "HOME"
+        - "RENTERS"
+        - "LIFE"
+        - "CAR"
+      QuoteDetails:
+        type: "object"
+        $ref: "#/definitions/QuoteDetails"
+  QuoteDetails:
+    type: "object"
+    required:
+    - "status"
+    - "clientDetails"
+    properties:
+      status: 
+        type: "string"
+        description: " Quote Status"
+        enum:
+        - "READY"
+        - "FAILED"
+        - "PROCESSED"
+        - "DONE"
+      clientDetails: 
+        type: "object"
+        $ref: "#/definitions/QuoteInput"
+      deductible:
+        type: "number"
+        example: 2000
+      effectiveDate:
+        type: "string"
+        format: "date-time"  
+  QuoteInput: 
+    type: "object"
+    required:
+    - "firstName"
+    - "lastName"
+    - "email"
+    - "birthDate"
+    - "address"
+    - "propertySize"
+    - "propertyYearBuilt"
+    properties:
+      firstName: 
+        type: "string"
+        example: "Drew"
+      lastName: 
+        type: "string"
+        example: "Clark"
+      email: 
+        type: "string"
+        example: "dclark6783@aol.com"
+      birthDate: 
+        type: "string"
+        example: "2/1/1992"
+      address: 
+        type: "string"
+        example: "1234 5th Street, Charlotte NC"
+      propertySize: 
+        type: "string"
+        example: "599"
+      propertyYearBuilt: 
+        type: "string"
+        example: "1880"
+  PaymentInformation: 
+    type: "object"
+    required:
+    - "id"
+    properties:
+      id:
+        type: "string"
+        example: "LQ1630872416720"
+      mortageId: 
+        type: "string"
+        example: "MID163084932900"
+  PaymentConfirmation: 
+    type: "object"
+    required:
+    - "id"
+    - "amount"
+    - "quoteId"
+    - "success"
+    properties:
+      id:
+        type: "string"
+        example: "cs_test_a1G84XYRf1nMjj5qpMj7qBXtIWdj97FAZmwpjyY6NLAgaDGz4EH4CnJpRS"
+      amount: 
+        type: "number"
+        example: "500"
+      quoteId: 
+        type: "string"
+        example: "LQ1630872416720"
+      success: 
+        type: "boolean"
+        example: true
+      confirmationDate: 
+        type: "string"
+        example: "2021-09-06T01:37:35.243Z"
+      sessionExpirationDate: 
+        type: number
+        format: "unix-time"
+        example: "2021-09-06T01:37:35.243Z"
+  Policy:
+    type: "object"
+    required: 
+    - "id"
+    - "quoteId"
+    - "deductible"
+    - "effectiveDate"
+    - "lengthOfTermn"
+    - "coverageType"
+    - "preimum"
+    - "policyStatus"
+    properties:
+      id:
+       type: "string"
+       example: "LP4769739024855"
+      quoteId: 
+        type: "string"
+        example: "LP4769739024855"
+      deductible: 
+        type: "number"
+        example: 500
+      effectiveDate: 
+        type: "string"
+        format: "date-string"
+        example: "2021-09-06T01:38:40.884Z"
+      lengthOfTerm: 
+        type: number
+        example: 12
+      coverageType: 
+        description: "Type of Coverage"
+        enum:
+        - "HOME"
+        - "RENTERS"
+        - "PET"
+        - "LIFE"
+        - "CAR"
+        example: "HOME"
+      preimum: 
+        type: number
+        example: 500
+      policyStatus: 
+        type: "string"
+        description: "Policy Status"
+        enum:
+        - "ACTIVE"
+        - "INACTIVE"
+        example: "ACTIVE"
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "http://swagger.io"
