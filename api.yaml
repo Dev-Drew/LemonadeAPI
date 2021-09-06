@@ -306,7 +306,7 @@ definitions:
       id:
         type: "string"
         example: "LQ1630872416720"
-      mortageId: 
+      mortgageId: 
         type: "string"
         example: "MID163084932900"
   PaymentConfirmation: 

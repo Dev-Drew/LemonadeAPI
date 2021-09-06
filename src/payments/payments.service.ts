@@ -46,8 +46,8 @@ export class PaymentService {
   ): Promise<PaymentConfirmation> {
     let paymentConfirmation: PaymentConfirmation;
     if (this.canProcessImmediately(paymentInfomartion)) {
-      console.log("Paying with Mortage ID");
-      paymentConfirmation = this.payWithMortageId(paymentInfomartion, quote);
+      console.log("Paying with Mortgage ID");
+      paymentConfirmation = this.payWithMortgageId(paymentInfomartion, quote);
     } else {
       console.log("Paying with Stripe Session Token");
       const session = await this.stripeService.createCheckoutSession(quote);
@@ -58,14 +58,14 @@ export class PaymentService {
     return paymentConfirmation;
   }
 
-  private payWithMortageId(
+  private payWithMortgageId(
     paymentInfomartion: PaymentInformation,
     quote: Quote
   ): PaymentConfirmation {
     let paymentConfirmation: PaymentConfirmation;
-    if (this.helperService.isValidMortageId(paymentInfomartion.mortageId)) {
+    if (this.helperService.isValidMortgageId(paymentInfomartion.mortgageId)) {
       paymentConfirmation = {
-        id: paymentInfomartion.mortageId,
+        id: paymentInfomartion.mortgageId,
         amount: quote.premium,
         quoteId: quote.id,
         confirmationDate: new Date(),
@@ -73,7 +73,7 @@ export class PaymentService {
       };
     } else {
       throw new HttpException(
-        `MortageId: ${paymentInfomartion.mortageId} is invalid. No payment will be processed by quoteId: ${quote.id}`,
+        `MortgageId: ${paymentInfomartion.mortgageId} is invalid. No payment will be processed by quoteId: ${quote.id}`,
         HttpStatus.BAD_REQUEST
       );
     }
@@ -94,7 +94,7 @@ export class PaymentService {
   }
 
   private canProcessImmediately(paymentInput: PaymentInformation): boolean {
-    return paymentInput.mortageId ? true : false;
+    return paymentInput.mortgageId ? true : false;
   }
 
   private isEligibleForPayment(

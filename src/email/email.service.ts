@@ -12,8 +12,8 @@ export class EmailService {
         to: email,
         from: "noreply@lemonade.com",
         subject: "Lemonade Policy ✔",
-        text: "Thanks for working with Powerful Mortage! You are insured through Lemonade.",
-        html: `<div>Thanks ${firstName} for working with Powerful Mortage! You are insured through Lemonade.See details of your policy below.</div> <br><br><br><div>Policy${JSON.stringify(
+        text: "Thanks for working with Powerful Mortgage! You are insured through Lemonade.",
+        html: `<div>Thanks ${firstName} for working with Powerful Mortgage! You are insured through Lemonade.See details of your policy below.</div> <br><br><br><div>Policy${JSON.stringify(
           policy,
           undefined,
           2
@@ -23,7 +23,7 @@ export class EmailService {
         Drew`,
       })
       .then(() => {
-        console.log(`Success! Email send to ${email}`);
+        console.log(`Success! Email sent to ${email}`);
       })
       .catch((error) => {
         console.log(`Error! Email did not send. Error: ${error}`);

@@ -7,5 +7,5 @@ export class PaymentInformation extends LemonadeDocument {
   @IsString()
   @Contains(IDPrefixes.MORTAGE_PREFIX)
   @Length(15, 15)
-  mortageId?: string;
+  mortgageId?: string;
 }

@@ -47,9 +47,9 @@ Once the tables are created you will need to create an .env file at project root
 
 A stripe secret key for can be generated through [stripes website](https://stripe.com/). If you're having a hard time checkout [this guide](https://www.appinvoice.com/en/s/documentation/how-to-get-stripe-publishable-key-and-secret-key-23).
 
-To send and receive emails this project has been configured with [mailtrap](https://mailtrap.io/). You'll need to create an account on their website to generate user and password
+To send and receive emails this project has been configured with [mailtrap](https://mailtrap.io/). To view the emails, you'll need to create an account on their website to generate user and password.
 
-You're .env should look something like this when complete
+Your .env file should look something like this when complete
 ```bash
 STRIPE_TEST_KEY=sk_test_51JVNu0LvFtdDa1wmNLgNXZy3whQzCa7ojb3DG8aMEWmxfwNCXTlz2yWvp27aRQLQFL0pFecfJol7kPvo87DWlrZC00kO6GJOhM
 MAILTRAP_USER=2a798c947a2e44
@@ -66,7 +66,7 @@ npm run start:dev
 ```
 ## Assumptions
 From Requirements
-    - Preiumum is always $500
+    - Premium is always $500
     - Stripe is used to process payment if mortgage ID is not provided
     - No UI is required
     - No deployment infrastructure is needed
@@ -91,7 +91,7 @@ Basic Flow
 1. Create a Quote using a "QuoteInput"
 2. Retrieve that Quote using its ID
 3. Create a payment confirmation using the ID of the quote.
- 3.1.  Only providing an ID will attempt checkout through Stripe. You may include any valid mortgageId if you want to bypass Stripe (   "mortageId": "MID163084932900")
+ 3.1.  Only providing an ID will attempt checkout through Stripe. You may include any valid mortgageId if you want to bypass Stripe (   "mortgageId": "MID163084932900")
 4. Create a policy using the ID on the "PaymentConfirmation" from step 3
 5. Retrieve that Policy using the ID from step 4.
 
