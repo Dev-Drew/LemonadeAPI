@@ -102,7 +102,7 @@ paths:
           description: "successful operation"
         "400":
           description: "Invalid status value"
-  /quotes:
+  /quote:
     get:
       tags:
       - "Quote"
