@@ -129,7 +129,7 @@ export class PolicyService {
 
     if (!isEligible) {
       throw new HttpException(
-        "Quote is not eligible for polciy creation.",
+        `Quote can not be created policy for this quote, make the quoteId on the payment confirmation matches and this quote is in Status ${QuoteStatus.READY} `,
         HttpStatus.BAD_REQUEST
       );
     }

@@ -1,4 +1,12 @@
-import { IsBoolean, IsNotEmpty, IsNumber, IsString } from "class-validator";
+import {
+  Contains,
+  IsBoolean,
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+  Length,
+} from "class-validator";
+import { IDPrefixes } from "src/common/constants/IDPrefixes.enum";
 import { LemonadeDocument } from "../../common/models/lemonadeDocument";
 
 export class PaymentConfirmation extends LemonadeDocument {
@@ -8,6 +16,8 @@ export class PaymentConfirmation extends LemonadeDocument {
 
   @IsNotEmpty()
   @IsString()
+  @Contains(IDPrefixes.QUOTE_PREFIX)
+  @Length(15, 15)
   quoteId: string;
 
   @IsBoolean()

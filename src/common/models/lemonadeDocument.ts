@@ -1,11 +1,22 @@
-import { IsNotEmpty, IsString } from "class-validator";
+import {
+  IsDateString,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  MinLength,
+} from "class-validator";
 
 export class LemonadeDocument {
   @IsNotEmpty()
   @IsString()
+  @MinLength(15)
   id: string;
 
-  createdTime?: Date;
+  @IsOptional()
+  @IsDateString()
+  createdTime?: string;
 
-  lastUpdateTime?: Date;
+  @IsOptional()
+  @IsDateString()
+  lastUpdateTime?: string;
 }
