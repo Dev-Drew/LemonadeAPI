@@ -53,24 +53,20 @@ export class PolicyService {
     quote: Quote
   ): Promise<boolean> {
     let isEligible = false;
-    if (quote) {
-      if (paymentConfirmation.quoteId === quote.id) {
-        if (this.idValidationService.isValidMortageId(paymentConfirmation.id)) {
-          isEligible = true;
-        } else {
-          isEligible = await this.isStripePaymentEligible(
-            quote,
-            paymentConfirmation
-          );
-        }
-        return isEligible;
+
+    if (
+      this.isQuoteEligibleForPolicyCreation(quote, paymentConfirmation.quoteId)
+    ) {
+      if (this.idValidationService.isValidMortageId(paymentConfirmation.id)) {
+        isEligible = true;
       } else {
-        throw new HttpException(
-          "This payment confirmation does not match the Id on the quote",
-          HttpStatus.BAD_REQUEST
+        isEligible = await this.isStripePaymentEligible(
+          quote,
+          paymentConfirmation
         );
       }
     }
+    return isEligible;
   }
 
   private createPolicyObject(quote: Quote): Policy {
@@ -118,6 +114,26 @@ export class PolicyService {
   private createPolicyId(): string {
     const policyId = "LP" + this.supportFunctionsService.randomFixedInteger(13);
     return policyId;
+  }
+
+  private isQuoteEligibleForPolicyCreation(
+    quote: Quote,
+    paymentConfirmationQuoteId: string
+  ): boolean {
+    let isEligible = false;
+    if (quote) {
+      const isCorrectQuoteForPolicy = paymentConfirmationQuoteId === quote.id;
+      const isStatusReady = quote.quoteDetails.status === QuoteStatus.READY;
+      isEligible = isCorrectQuoteForPolicy && isStatusReady;
+    }
+
+    if (!isEligible) {
+      throw new HttpException(
+        "Quote is not eligible for polciy creation.",
+        HttpStatus.BAD_REQUEST
+      );
+    }
+    return isEligible;
   }
 
   private determineEffectiveDate(quote: Quote): Date {

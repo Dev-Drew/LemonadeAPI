@@ -63,7 +63,7 @@ export class DyanmoService {
         if (error) {
           reject(error);
         } else {
-          resolve(data);
+          resolve(data?.Items);
         }
       });
     }).then((data) => {
