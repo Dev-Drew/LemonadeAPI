@@ -11,25 +11,25 @@ I am using two local DyanmoDB tables to store data. One table is used for Quotes
 
 ## Features
 
-- User can provide a "quoteInput" object to store a "quote" in a Dyanmo Table ("QuotesTable")
+- User can provide a "QuoteInput" object to store a "Quote" in a Dyanmo Table ("QuotesTable")
 
 - User can query both "QuotesTable" and "PoliciesTable" for individual records given matching IDs
 
 - User can make a request to return all records in both "QuotesTable" and "PoliciesTable"
 
-- User can create a "PaymentConfirmation" object given a valid quoteId
+- User can create a "PaymentConfirmation" object given a valid quoteID
 
-- If correctly formatted "mortgageID" is provide then a paymentConfirmation will be returned with the Id of the mortgageID
+- If correctly formatted "mortgageID" is provided then a paymentConfirmation will be returned with the ID of the mortgageID
 
-- If no "mortgageId" is provided a stripeCheckoutSession will be created with the Id of the mortgageID
+- If no "mortgageID" is provided a stripeCheckoutSession will be created with the ID of the mortgageID
 
-- In order to proceed to creating a policy a the checkoutSession must be marked as "PAID"
+- In order to proceed to creating a policy the stripe session token must be marked as "PAID"
 
-- User can provide a valid "PaymentConfirmation" contraining either a mortgageId or valid stripe session token to create a policy.
+- User can provide a valid "PaymentConfirmation" containing either a mortgageID or valid stripe session token to create a policy
 
-- User may only create Policies for quotes that are in the "READY status
+- User may only create policies for quotes that are in the "READY" status
 
-- quoteId stored on the payment confirmation MUSt match the given quoteId
+- QuoteID stored on the payment confirmation MUST match the given quoteID
 
 - User can delete both Quotes and Policies given the correct ID
 
@@ -66,7 +66,7 @@ npm install
 
   
 
-This project uses two AWS local Dynamo DB Tables perform CRUD operations. You will need install Dynamo DB on your local machine. It's pretty straightforward and AWS has [great documentation](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DynamoDBLocal.html)
+This project uses two AWS local Dynamo DB Tables to perform CRUD operations. You will need install Dynamo DB on your local machine. It's pretty straightforward and AWS has [great documentation](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DynamoDBLocal.html)
 
   
 
@@ -92,11 +92,11 @@ Once the tables are created you will need to create an .env file at project root
 
   
 
-A stripe secret key for can be generated through [stripes website](https://stripe.com/). If you're having a hard time checkout [this guide](https://www.appinvoice.com/en/s/documentation/how-to-get-stripe-publishable-key-and-secret-key-23).
+A stripe secret key can be generated through [stripe's website](https://stripe.com/). If you're having a hard time, check out [this guide](https://www.appinvoice.com/en/s/documentation/how-to-get-stripe-publishable-key-and-secret-key-23).
 
   
 
-To send and receive emails this project has been configured with [mailtrap](https://mailtrap.io/). To view the emails, you'll need to create an account on their website to generate user and password.
+To send and receive emails this project has been configured with [mailtrap](https://mailtrap.io/). A mailtrap userID and password is required, these can be retrieved from the mailtrap website.
 
   
 
@@ -146,19 +146,19 @@ From Requirements
 
 Personal
 
-- QuoteIds will be random 15 characters start with "LQ"
+- QuoteIDs will be random 15 characters start with "LQ"
 
-- MortgageIds will be random 15 characters start with "MID"
+- MortgageIDs will be random 15 characters start with "MID"
 
 - Any 15 character MortgageID string will be valid if it starts with "MID"
 
-- PolicyIds will be random 15 characters start with "LP"
+- PolicyIDs will be random 15 characters start with "LP"
 
-- User is always fully authenticated and authorized.
+- User is always fully authenticated and authorized
 
-- One quote is only good to create one policy (can not use the same quoteId to create multiple polices)
+- One quote is only good to create one policy (can not use the same quoteID to create multiple polices)
 
-- Additional libraries / frameworks are allowed.
+- Additional libraries / frameworks are allowed
 
 - No requirement for test coverage
 
@@ -168,7 +168,7 @@ Personal
 
   
 
-Take a look at the api.yaml file I've included the project to see what type of requests you can make.
+Take a look at the [api.yaml](https://github.com/Dev-Drew/LemonadeAPI/blob/master/api.yaml) file I've included with the project to see what type of requests you can make.
 
   
 
@@ -178,13 +178,13 @@ Basic Flow
 
 2. Retrieve that Quote using its ID
 
-3. Create a payment confirmation using the ID of the quote.
+3. Create a payment confirmation using the ID of the quote
 
-3.1. Only providing an ID will attempt checkout through Stripe. You may include any valid mortgageId if you want to bypass Stripe ( "mortgageId": "MID163084932900")
+ 3.1 Only providing an ID will attempt checkout through Stripe. You may include any valid mortgageID if you want to bypass Stripe ( "mortgageID": "MID163084932900")
 
 4. Create a policy using the ID on the "PaymentConfirmation" from step 3
 
-5. Retrieve that Policy using the ID from step 4.
+5. Retrieve that Policy using the ID from step 4
 
   
   
@@ -232,7 +232,7 @@ More Advanced:
 
   
 
-[Stripe](https://stripe.com/): This was a project required to handle payments. Great dashboards and documentation. I've only enabled test mode, but I can still see transactions on my test dashboard.
+[Stripe](https://stripe.com/): Project requirement. Great dashboards and documentation. I've only enabled test mode, but I can still see transactions on my test dashboard.
 
   
 
@@ -256,7 +256,7 @@ More Advanced:
 
   
 
-[mailtrap](https://mailtrap.io/): Email Sandbox, really cool app that allows you to send a receive emails. Was hesitant to put up my personal info in plaintext. We can view sent emails via the mailtrap UI.
+[mailtrap](https://mailtrap.io/): Email Sandbox, really cool app that allows you to send and receive emails. I was hesitant to put up my personal info in plaintext. We can view sent emails via the mailtrap UI.
 
   
 
