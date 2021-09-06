@@ -7,6 +7,8 @@ Take home interview assignment from 8/31/2021 to be returned on 9/7/2021 to Lemo
 Additional documentation available: [API.yaml](https://github.com/Dev-Drew/LemonadeAPI/blob/master/api.yaml), [Postman Sample Collection](https://github.com/Dev-Drew/LemonadeAPI/blob/master/documents/Lemonade%20Partner%20API.postman_collection.json), [Presentation](https://github.com/Dev-Drew/LemonadeAPI/blob/master/documents/Lemonade%20Presentation.pdf). 
 
 
+I am using two local DyanmoDB tables to store data. One table is used for Quotes and the other for Policies. This approach has numerous advantages over an array. A single endpoint looks at the type of id provided and makes a request to the correct table. Checkout the Setup section of this document to install DyanmoDB on your local. I've included a .db file with some [preloaded data]().
+
 ## Features
 
 - User can provide a "quoteInput" object to store a "quote" in a Dyanmo Table ("QuotesTable")
@@ -36,7 +38,7 @@ Additional documentation available: [API.yaml](https://github.com/Dev-Drew/Lemon
   
   
 
-## Installation
+## Setup
 
   
 
