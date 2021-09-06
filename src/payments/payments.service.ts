@@ -108,13 +108,13 @@ export class PaymentService {
           isValid = true;
         } else {
           throw new HttpException(
-            `Quote is no in the ready status`,
+            `Quote is not in the Ready status`,
             HttpStatus.BAD_REQUEST
           );
         }
       } else {
         throw new HttpException(
-          `ID is not a valid quote id: ${quote.id}`,
+          `ID is not a valid quote ID: ${quote.id}`,
           HttpStatus.BAD_REQUEST
         );
       }
