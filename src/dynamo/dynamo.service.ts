@@ -10,7 +10,7 @@ import { TableNames } from "./constants/TableNames.enum";
 
 const AWS = require("aws-sdk");
 
-export class DyanmoService {
+export class DynamoService {
   public async postItem(itemToBeSaved: LemonadeDocument): Promise<any> {
     const docClient = new AWS.DynamoDB.DocumentClient();
 

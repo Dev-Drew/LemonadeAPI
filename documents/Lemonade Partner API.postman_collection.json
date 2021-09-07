@@ -130,7 +130,7 @@
 			"response": []
 		},
 		{
-			"name": "Create Payment Confirmation [Mortage]",
+			"name": "Create Payment Confirmation [Mortgage]",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -143,7 +143,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"id\": \"{QUOTEID}\",\n    \"mortageId\": \"MID163084932900\"\n}"
+					"raw": "{\n\t\"id\": \"{QUOTEID}\",\n    \"mortgageId\": \"MID163084932900\"\n}"
 				},
 				"url": {
 					"raw": "http://localhost:3000/api/paymentConfirmation",
@@ -198,7 +198,7 @@
 			"response": []
 		},
 		{
-			"name": "Create Policy [Mortage]",
+			"name": "Create Policy [Mortgage]",
 			"request": {
 				"method": "POST",
 				"header": [

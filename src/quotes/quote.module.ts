@@ -1,11 +1,11 @@
 import { Module } from "@nestjs/common";
 import { SupportFunctionsService } from "src/common/services/supportFunctions.service";
-import { DyanmoService } from "src/dyanmo/dyanmo.service";
+import { DynamoService } from "src/dynamo/dynamo.service";
 import { QuoteController } from "./quote.controller";
 import { QuoteService } from "./quote.service";
 
 @Module({
   controllers: [QuoteController],
-  providers: [QuoteService, DyanmoService, SupportFunctionsService],
+  providers: [QuoteService, DynamoService, SupportFunctionsService],
 })
 export class QuoteModule {}

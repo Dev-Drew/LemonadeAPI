@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
-import { DyanmoService } from "src/dyanmo/dyanmo.service";
+import { DynamoService } from "src/dynamo/dynamo.service";
 import { PaymentConfirmation } from "src/payments/models/paymentConfirmation";
 import { Quote } from "src/quotes/models/quote";
 import { QuoteStatus } from "src/quotes/constants/quoteStatus.enum";
@@ -13,7 +13,7 @@ const open = require("open");
 export class PaymentService {
   public constructor(
     private readonly stripeService: StripeService,
-    private readonly dyanmoService: DyanmoService,
+    private readonly dynamoService: DynamoService,
     private readonly helperService: IDValidationService
   ) {}
 
@@ -24,7 +24,7 @@ export class PaymentService {
       "Received Request to process payment for client: " +
         JSON.stringify(paymentInformation.id)
     );
-    const quote: Quote = await this.dyanmoService.getItem(
+    const quote: Quote = await this.dynamoService.getItem(
       paymentInformation.id
     );
 
