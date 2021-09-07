@@ -56,6 +56,8 @@ paths:
             $ref: "#/definitions/Quote"
         "400":
           description: "Bad Request"
+        "404":
+          description: "Item not found"  
     put:
       tags:
       - "Items"

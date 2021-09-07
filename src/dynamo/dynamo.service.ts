@@ -29,8 +29,6 @@ export class DynamoService {
           console.log("Added item:", JSON.stringify(itemToBeSaved, null, 2));
         }
       });
-    }).then((data) => {
-      return data;
     });
   }
 
@@ -41,15 +39,11 @@ export class DynamoService {
     return new Promise((resolve, reject) => {
       docClient.get(params, (error: AWSError, getItemOutput: GetItemOutput) => {
         if (error) {
-          console.log("ERROR: " + JSON.stringify(error));
           reject(error);
         } else {
-          console.log("DATA: " + JSON.stringify(getItemOutput));
           resolve(getItemOutput?.Item?.data);
         }
       });
-    }).then((data) => {
-      return data;
     });
   }
 
@@ -66,8 +60,6 @@ export class DynamoService {
           resolve(data?.Items);
         }
       });
-    }).then((data) => {
-      return data;
     });
   }
 
@@ -89,8 +81,6 @@ export class DynamoService {
           resolve(HttpStatus.OK);
         }
       });
-    }).then((data) => {
-      return data;
     });
   }
 
@@ -98,19 +88,14 @@ export class DynamoService {
     const docClient: DocumentClient = new AWS.DynamoDB.DocumentClient();
     const params = this.createParams(id);
 
-    console.log("Trying to item with id " + id);
     return new Promise((resolve, reject) => {
-      docClient.delete(params, (error: AWSError, data) => {
+      docClient.delete(params, (error: AWSError) => {
         if (error) {
-          console.log("ERROR: " + JSON.stringify(error));
           reject(error);
         } else {
-          console.log("DATA: " + JSON.stringify(data));
           resolve(HttpStatus.OK);
         }
       });
-    }).then((data) => {
-      return data;
     });
   }
 
