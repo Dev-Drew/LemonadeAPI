@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
-import { DyanmoService } from "src/dyanmo/dyanmo.service";
+import { DynamoService } from "src/dynamo/dynamo.service";
 import { PaymentConfirmation } from "src/payments/models/paymentConfirmation";
 import { StripeService } from "src/payments/stripe/stripe.service";
 import { Policy } from "src/policies/models/policy";
@@ -17,7 +17,7 @@ export class PolicyService {
   public constructor(
     private readonly appService: AppService,
     private readonly stripeService: StripeService,
-    private readonly dyanmoService: DyanmoService,
+    private readonly dynamoService: DynamoService,
     private readonly emailService: EmailService,
     private readonly idValidationService: IDValidationService,
     private readonly supportFunctionsService: SupportFunctionsService
@@ -32,8 +32,8 @@ export class PolicyService {
 
     if (await this.isEligibleForPolicyCreation(paymentConfirmation, quote)) {
       const policy = this.createPolicyObject(quote);
-      const savedPolicy: Policy = await this.dyanmoService.postItem(policy);
-      await this.dyanmoService.updateItem(quote, QuoteStatus.DONE);
+      const savedPolicy: Policy = await this.dynamoService.postItem(policy);
+      await this.dynamoService.updateItem(quote, QuoteStatus.DONE);
       this.emailService.sendEmail(
         policy,
         quote.quoteDetails.clientDetails.email,

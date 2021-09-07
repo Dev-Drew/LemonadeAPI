@@ -34,7 +34,7 @@ export class IDValidationService {
   }
 
   public isMortgageId(id: string): boolean {
-    return id.slice(0, 3) === IDPrefixes.MORTAGE_PREFIX ? true : false;
+    return id.slice(0, 3) === IDPrefixes.MORTGAGE_PREFIX ? true : false;
   }
 
   private isCorrectLenth(id: string, correctLength: number) {

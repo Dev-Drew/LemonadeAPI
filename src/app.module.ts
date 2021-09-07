@@ -4,7 +4,7 @@ import { ConfigModule } from "@nestjs/config";
 import { StripeModule } from "nestjs-stripe";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
-import { DyanmoService } from "./dyanmo/dyanmo.service";
+import { DynamoService } from "./dynamo/dynamo.service";
 import { PaymentsModule } from "./payments/payments.module";
 import { PolicyModule } from "./policies/policy.module";
 import { QuoteModule } from "./quotes/quote.module";
@@ -34,6 +34,6 @@ import { QuoteModule } from "./quotes/quote.module";
     }),
   ],
   controllers: [AppController],
-  providers: [DyanmoService, AppService],
+  providers: [DynamoService, AppService],
 })
 export class AppModule {}

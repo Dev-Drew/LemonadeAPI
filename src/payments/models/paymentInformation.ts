@@ -5,7 +5,7 @@ import { LemonadeDocument } from "src/common/models/lemonadeDocument";
 export class PaymentInformation extends LemonadeDocument {
   @IsOptional()
   @IsString()
-  @Contains(IDPrefixes.MORTAGE_PREFIX)
+  @Contains(IDPrefixes.MORTGAGE_PREFIX)
   @Length(15, 15)
   mortgageId?: string;
 }

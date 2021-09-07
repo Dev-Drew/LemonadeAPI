@@ -20,7 +20,7 @@ tags:
 - name: "Quote"
   description: "Everthing to do with creating Quotes"
 - name: "Payment"
-  description: "Pay with you or with this"
+  description: "Pay with you or with us"
   externalDocs:
     description: "Find out more about our store"
     url: "http://swagger.io"
@@ -47,15 +47,17 @@ paths:
       - in: "path"
         type: "string"
         name: "id"
-        description: "An id for quote or a policy"
+        description: "An id for quote or policy. QuoteIDs start with 'LQ' PolicyIDs start with 'LP'. Both are 15 characters long"
         required: true
       responses:
         "200":
-          description: "Scucess"
+          description: "Success"
           schema: 
             $ref: "#/definitions/Quote"
-        "405":
-          description: "Invalid input"
+        "400":
+          description: "Bad Request"
+        "404":
+          description: "Item not found"  
     put:
       tags:
       - "Items"
@@ -79,15 +81,17 @@ paths:
         schema:
           $ref: "#/definitions/Quote"
       responses:
+        "200":
+          description: "Success"
+          schema: 
+            $ref: "#/definitions/Quote"
         "400":
-          description: "Invalid ID supplied"
-        "404":
-          description: "Not found"
+          description: "Bad Request"
     delete:
       tags:
       - "Items"
       summary: "Delete an existing quote or policy"
-      description: "Deletes an existing Quote or Policy from the appropriate table "
+      description: "Deletes an existing quote or policy from the appropriate table. Request always returns code 200 "
       operationId: "delete"
       produces:
       - "application/json"
@@ -95,36 +99,32 @@ paths:
       - in: "path"
         type: "string"
         name: "id"
-        description: "An id for an existing quote or a policy"
+        description: "An id for an existing quote or policy"
         required: true
       responses:
         "200":
-          description: "successful operation"
-        "400":
-          description: "Invalid status value"
+          description: "Success"
   /quote:
     get:
       tags:
       - "Quote"
       summary: "Return all quotes stored in table"
-      description: "Muliple tags can be provided with comma separated strings. Use         tag1, tag2, tag3 for testing."
+      description: "Return an array of 'Quote' objects"
       operationId: "getAllQuotes"
       produces:
       - "application/json"
       responses:
         "200":
-          description: "successful operation"
+          description: "Success"
           schema:
             type: "array"
             items:
               $ref: "#/definitions/Quote"
-        "400":
-          description: "Invalid tag value"
     post:
       tags:
       - "Quote"
-      summary: "Creates a home insurance quote"
-      description: "Each quote generates a unque ID and is saved in QuotesTable"
+      summary: "Create a home insurance quote"
+      description: "Each quote generates a unique 15 character id and is saved in QuotesTable. For this project preimum is always 500."
       operationId: "createQuote"
       produces:
       - "application/json"
@@ -137,38 +137,34 @@ paths:
           $ref: "#/definitions/QuoteInput"
       responses:
         "200":
-          description: "successful operation"
+          description: "Success"
           schema:
             $ref: "#/definitions/Quote"
         "400":
-          description: "Invalid username supplied"
-        "404":
-          description: "User not found"
+          description: "Bad Request"
   /Payment:
     post:
       tags:
       - "Payment"
-      summary: "Creates a PaymentConfirmation given a valid PaymentInformation"
-      description: "If no mortgageID is provided, a stripe session will be created. It is only valid for 24 hours."
+      summary: "Create a PaymentConfirmation given a valid PaymentInformation"
+      description: "If no mortgageID is provided, a stripe session will be created. Note that the stripe session token is only valid for 24 hours."
       operationId: "createPaymentConfirmation"
       produces:
       - "application/json"
       parameters:
       - in: "body"
         name: "body"
-        description: "Requires a PaymentInformation object. Includes the Id of a saved quote. Opitional mortgageId"
+        description: "QuoteID of a quote in 'READY' status. If no 'mortgageID' is provided payment will be through stripe."
         required: true
         schema:
           $ref: "#/definitions/PaymentInformation"
       responses:
         "200":
-          description: "successful operation"
+          description: "Success"
           schema:
             $ref: "#/definitions/PaymentConfirmation"
         "400":
-          description: "Invalid username supplied"
-        "404":
-          description: "User not found"
+          description: "Bad Request"
   /Policy:
     get:
       tags:
@@ -190,8 +186,8 @@ paths:
     post:
       tags:
       - "Policy"
-      summary: "Creates a Policy given a valid PaymentConfirmation"
-      description: "The ID contained in the payment information must be a valid mortgageID or stripe session token."
+      summary: "Create a policy given a valid PaymentConfirmation"
+      description: "The id contained in the payment information must be a valid mortgageID or stripe session token."
       operationId: "createPolicy"
       produces:
       - "application/json"
@@ -204,13 +200,11 @@ paths:
           $ref: "#/definitions/PaymentConfirmation"
       responses:
         "200":
-          description: "successful operation"
+          description: "Success"
           schema:
             $ref: "#/definitions/Policy"
         "400":
-          description: "Invalid username supplied"
-        "404":
-          description: "User not found"
+          description: "Bad Request"
 definitions:
   Quote:
     type: "object"
